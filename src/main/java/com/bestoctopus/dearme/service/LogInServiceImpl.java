@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class LogInServiceImpl implements LogInService {
     private final UserRepository userRepository;
 
+
     @Autowired
     public LogInServiceImpl(UserRepository userRepository){
         this.userRepository = userRepository;
