@@ -1,5 +1,6 @@
 package com.bestoctopus.dearme.domain;
 
+import com.bestoctopus.dearme.dto.PutBucketListDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,11 +21,25 @@ public class BucketList {
     private User user;
 
     @Column(nullable = false)
-    private Status status;
+    private Boolean status;
+
 
     @Column(length = 30, nullable = false)
     private String goal;
 
     @Column(nullable = false)
     private LocalDate date;
+
+
+    @Builder
+    public BucketList(boolean status, String goal, LocalDate date) {
+        this.status = status;
+        this.goal = goal;
+        this.date = date;
+    }
+
+    public void update(PutBucketListDto putBucketListDto) {
+        if (putBucketListDto.getStatus() != null) this.status = putBucketListDto.getStatus();
+        if (putBucketListDto.getGoal() != null) this.goal = putBucketListDto.getGoal();
+    }
 }
