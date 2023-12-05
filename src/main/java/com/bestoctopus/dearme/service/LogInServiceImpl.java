@@ -15,7 +15,7 @@ public class LogInServiceImpl implements LogInService {
 
     @Override
     public void validateId(String id){
-        userRepository.findById(id)
-                .ifPresent(throw new );
+        userRepository.findById(id);
+//                .ifPresent(throw new );
     }
 }
