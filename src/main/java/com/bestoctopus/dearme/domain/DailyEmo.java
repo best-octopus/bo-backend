@@ -1,5 +1,6 @@
 package com.bestoctopus.dearme.domain;
 
+import com.bestoctopus.dearme.dto.PutBucketListDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,4 +25,14 @@ public class DailyEmo {
 
     @Column(nullable = false)
     private Emotion emotion;
+
+    @Builder
+    public DailyEmo(LocalDate date, Emotion emotion) {
+        this.date = date;
+        this.emotion = emotion;
+    }
+
+    public void update(Emotion emotion) {
+        if (emotion != null) this.emotion = emotion;
+    }
 }

@@ -4,28 +4,29 @@ import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LogInServiceImpl implements LogInService {
     private final UserRepository userRepository;
 
-    @Autowired
-    public LogInServiceImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
-
-    @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     private final JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    public LogInServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenUtil jwtTokenUtil) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenUtil = jwtTokenUtil;
+    }
+
     @Override
-    public User join (UserDto userDto) {
+    public User join(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(userDto.toEntity());
-    }
+    }ㄴ
 
     @Override
     public void isIdDuplicate(String id) {
@@ -48,7 +49,7 @@ public class LogInServiceImpl implements LogInService {
     }
 
     @Override
-    public String generateJwt(User user){
+    public String generateJwt(User user) {
         return jwtTokenUtil.generateToken(user);
     }
 
