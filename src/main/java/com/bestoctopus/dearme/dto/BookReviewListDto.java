@@ -1,26 +1,38 @@
 package com.bestoctopus.dearme.dto;
 
 
+
+import com.bestoctopus.dearme.domain.BookReview;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class BookReviewListDto {
+    private final Long id;
 
     private String reviewTitle;
 
     private String contents;
 
-    private String lastEdit;
+    private final String nickname;
 
-    private String title;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private final LocalDate lastEditTime;
 
-    private String img;
 
-    private String nickname;
+    public BookReviewListDto(BookReview bookreview) {
+        this.id = bookreview.getId();
+        this.reviewTitle = bookreview.getTitle();
+        this.contents = bookreview.getContent();
+        this.lastEditTime = bookreview.getLastEditTime();
 
+        this.nickname = bookreview.getUser().getNickname();
+    }
     
 }
