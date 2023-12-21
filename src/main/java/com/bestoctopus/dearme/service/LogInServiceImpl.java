@@ -3,6 +3,7 @@ package com.bestoctopus.dearme.service;
 import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.repository.UserRepository;
+import com.bestoctopus.dearme.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class LogInServiceImpl implements LogInService {
     public User join(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         return userRepository.save(userDto.toEntity());
-    }ㄴ
+    }
 
     @Override
     public void isIdDuplicate(String id) {
@@ -49,8 +50,8 @@ public class LogInServiceImpl implements LogInService {
     }
 
     @Override
-    public String generateJwt(User user) {
-        return jwtTokenUtil.generateToken(user);
+    public String generateJwt(String id) {
+        return jwtTokenUtil.generateToken(id);
     }
 
 }

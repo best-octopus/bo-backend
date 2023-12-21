@@ -18,7 +18,7 @@ public class LogInController {
 
     @GetMapping
     public ResponseEntity<?> validate(@RequestParam String id){
-            logInService.validateId(id);
+            logInService.isIdDuplicate(id);
             return ResponseEntity.ok()
                     .build();
     }
