@@ -5,21 +5,28 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 @NoArgsConstructor
+@PropertySource("classpath:application-secret.properties")
 public class JwtTokenUtil {
-    private final String secretKey = "best-octopus";
-    private Key key;
+
+    @Value("${secretKey}")
+    private String secretKeyPlain;
+
+    private SecretKey secretKey;
 
     @PostConstruct
     protected void init() {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        String keyBase64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
+        this.secretKey = Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
     }
 
     public String generateToken(String userId){
@@ -30,7 +37,7 @@ public class JwtTokenUtil {
 
         return Jwts.builder()
                 .claims(claims)
-                .signWith(key)
+                .signWith(secretKey)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + tokenValidTime))
                 .compact();
@@ -39,13 +46,14 @@ public class JwtTokenUtil {
 
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public String getEmailFromToken(String token) {
         Claims claims = extractAllClaims(token);
         return claims.get("id", String.class);
     }
-
-
 }

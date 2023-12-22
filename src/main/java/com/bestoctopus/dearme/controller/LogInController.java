@@ -6,20 +6,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/signup")
+@RequestMapping("/user")
 public class LogInController {
 
     private final LogInService logInService;
 
     @Autowired
-    public LogInController(LogInService logInService){
+    public LogInController(LogInService logInService) {
         this.logInService = logInService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> validate(@RequestParam String id){
-            logInService.isIdDuplicate(id);
-            return ResponseEntity.ok()
-                    .build();
+    @GetMapping("/id/exists")
+    public ResponseEntity<?> validate(@RequestParam String id) {
+        logInService.isIdDuplicate(id);
+        return ResponseEntity.ok().body(id);
     }
 }

@@ -2,6 +2,7 @@ package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.UserDto;
+import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.repository.UserRepository;
 import com.bestoctopus.dearme.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,17 +34,17 @@ public class LogInServiceImpl implements LogInService {
     public void isIdDuplicate(String id) {
         userRepository.findById(id)
                 .ifPresent(m -> {
-                    //
+                    throw new NotFoundUserException();
                 });
     }
 
     @Override
     public User authenticate(UserDto userdto) {
-        User user = userRepository.findById(userdto.getId()).orElseThrow(
-                () -> //에러);
+        User user = userRepository.findById(userdto.getId())
+                .orElseThrow(NotFoundUserException::new);
 
         if (!passwordEncoder.matches(userdto.getPassword(), user.getPassword())) {
-            //에러;
+            throw new NotFoundUserException();
         }
 
         return user;
@@ -53,5 +54,4 @@ public class LogInServiceImpl implements LogInService {
     public String generateJwt(String id) {
         return jwtTokenUtil.generateToken(id);
     }
-
 }
