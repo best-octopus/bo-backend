@@ -1,11 +1,16 @@
 package com.bestoctopus.dearme.service;
 
-import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.UserDto;
+import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 
 public interface LogInService {
-    User authenticate(UserDto userdto);
-    User join(UserDto userDto);
+    UserDto logIn(UserLogInRequestDto userDto);
+
+    void join(UserDto userDto);
+
     void isIdDuplicate(String email);
+
+    void isNicknameDuplicate(String email);
+
     String generateJwt(String id);
 }

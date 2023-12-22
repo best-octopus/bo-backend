@@ -2,7 +2,9 @@ package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.UserDto;
+import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
+import com.bestoctopus.dearme.exception.NotValidateException;
 import com.bestoctopus.dearme.repository.UserRepository;
 import com.bestoctopus.dearme.utils.JwtTokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,29 +27,37 @@ public class LogInServiceImpl implements LogInService {
     }
 
     @Override
-    public User join(UserDto userDto) {
+    public void join(UserDto userDto) {
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        return userRepository.save(userDto.toEntity());
+        userRepository.save(userDto.toEntity());
     }
 
     @Override
     public void isIdDuplicate(String id) {
         userRepository.findById(id)
                 .ifPresent(m -> {
-                    throw new NotFoundUserException();
+                    throw new NotValidateException("이미 존재하는 id 입니다.");
                 });
     }
 
     @Override
-    public User authenticate(UserDto userdto) {
-        User user = userRepository.findById(userdto.getId())
+    public void isNicknameDuplicate(String nickname) {
+        userRepository.findByNickname(nickname)
+                .ifPresent(m -> {
+                    throw new NotValidateException("이미 존재하는 nickname 입니다.");
+                });
+    }
+
+    @Override
+    public UserDto logIn(UserLogInRequestDto userDto) {
+        User user = userRepository.findById(userDto.getId())
                 .orElseThrow(NotFoundUserException::new);
 
-        if (!passwordEncoder.matches(userdto.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(userDto.getPassword(), user.getPassword())) {
             throw new NotFoundUserException();
         }
 
-        return user;
+        return UserDto.fromEntity(user);
     }
 
     @Override

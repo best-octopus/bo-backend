@@ -15,7 +15,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handlerFileUploadException(NotFoundUserException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("errorCode", "NOT_FOUND_USER");
-        errorResponse.put("errorMessage", "해당하는 유저를 찾지 못했습니다.");
+        errorResponse.put("errorMessage", "유효하지 않은 정보입니다.");
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(NotValidateException.class)
+    public ResponseEntity<Object> handlerNotValidateException(NotValidateException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("errorCode", "NOT_VALIDATE");
+        errorResponse.put("errorMessage", ex.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
 }
