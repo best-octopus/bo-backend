@@ -6,24 +6,27 @@ import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.exception.NotValidateException;
 import com.bestoctopus.dearme.repository.UserRepository;
-import com.bestoctopus.dearme.utils.JwtTokenUtil;
+import com.bestoctopus.dearme.util.JwtIssuer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class LogInServiceImpl implements LogInService {
+
+    //    private final String AUTHORIZATION_HEADER = "Authorization";
+    //    public final String BEARER_PREFIX = "Bearer ";
+    private final String ROLE_NORMAL = "NORMAL";
+
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
-    private final JwtTokenUtil jwtTokenUtil;
+    private final JwtIssuer jwtIssuer;
 
     @Autowired
-    public LogInServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenUtil jwtTokenUtil) {
+    public LogInServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtIssuer jwtIssuer) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtIssuer = jwtIssuer;
     }
 
     @Override
@@ -61,7 +64,15 @@ public class LogInServiceImpl implements LogInService {
     }
 
     @Override
-    public String generateJwt(String id) {
-        return jwtTokenUtil.generateToken(id);
+    public String generateToken(String userId) {
+        return jwtIssuer.createAccessToken(userId, "ROLE_"+ROLE_NORMAL);
     }
+
+//    private String extractTokenFromRequest(HttpServletRequest request) {
+//        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+//        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+//            return bearerToken.substring(7);
+//        }
+//        return null;
+//    }
 }

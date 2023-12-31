@@ -26,7 +26,6 @@ public class BucketList {
     @Column(nullable = false)
     private Boolean status;
 
-
     @Column(length = 30, nullable = false)
     private String goal;
 
@@ -35,7 +34,7 @@ public class BucketList {
 
 
     @Builder
-    public BucketList(boolean status, String goal, LocalDate date) {
+    public BucketList(Boolean status, String goal, LocalDate date) {
         this.status = status;
         this.goal = goal;
         this.date = date;

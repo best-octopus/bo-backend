@@ -26,4 +26,12 @@ public class GlobalExceptionHandler {
         errorResponse.put("errorMessage", ex.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }
+
+    @ExceptionHandler(JwtInvalidException.class)
+    public ResponseEntity<Object> handlerJwtInvalidException(JwtInvalidException ex){
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("errorCode", "INVALID_JWT");
+        errorResponse.put("errorMessage", ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
 }

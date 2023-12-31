@@ -12,5 +12,5 @@ public interface LogInService {
 
     void isNicknameDuplicate(String email);
 
-    String generateJwt(String id);
+    String generateToken(String userId);
 }
