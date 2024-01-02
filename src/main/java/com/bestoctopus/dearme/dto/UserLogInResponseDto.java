@@ -11,12 +11,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserLogInResponseDto {
     private UserDto user;
-    private String token;
+    private JwtDto jwt;
 
-    public static UserLogInResponseDto fromEntity(UserDto userDto, String token) {
+    public static UserLogInResponseDto fromEntity(UserDto userDto, JwtDto jwtDto) {
         return UserLogInResponseDto.builder()
                 .user(userDto)
-                .token(token)
+                .jwt(jwtDto)
                 .build();
     }
 }

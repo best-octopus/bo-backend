@@ -1,6 +1,7 @@
 package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.User;
+import com.bestoctopus.dearme.dto.JwtDto;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
@@ -16,6 +17,7 @@ public class LogInServiceImpl implements LogInService {
 
     //    private final String AUTHORIZATION_HEADER = "Authorization";
     //    public final String BEARER_PREFIX = "Bearer ";
+    private final String GRANT_TYPE_BEARER = "Bearer";
     private final String ROLE_NORMAL = "NORMAL";
 
     private final UserRepository userRepository;
@@ -64,8 +66,19 @@ public class LogInServiceImpl implements LogInService {
     }
 
     @Override
-    public String generateToken(String userId) {
-        return jwtIssuer.createAccessToken(userId, "ROLE_"+ROLE_NORMAL);
+    public JwtDto generateToken(String userId) {
+        String accessToken = jwtIssuer.createAccessToken(userId, "ROLE_" + ROLE_NORMAL);
+        String refreshToken = jwtIssuer.createRefreshToken(userId, "ROLE_" + ROLE_NORMAL);
+        return JwtDto.builder()
+                .grantType(GRANT_TYPE_BEARER)
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Override
+    public void logOut(String accessToken, String refreshToken){
+
     }
 
 //    private String extractTokenFromRequest(HttpServletRequest request) {

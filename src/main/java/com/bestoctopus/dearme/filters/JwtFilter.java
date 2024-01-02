@@ -14,8 +14,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -34,9 +32,6 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 Authentication jwtAuthenticationToken = new JwtAuthenticationToken(token);
                 Authentication authentication = authenticationManager.authenticate(jwtAuthenticationToken);
-//                authentication.getAuthorities().forEach(auth->{
-//                    System.out.println(auth.getAuthority());
-//                });
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (AuthenticationException authenticationException) {
                 SecurityContextHolder.clearContext();

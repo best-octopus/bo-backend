@@ -1,10 +1,8 @@
 package com.bestoctopus.dearme.config;
 
 import com.bestoctopus.dearme.token.JwtAuthenticationProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,10 +22,10 @@ public class SecurityConfig {
 
     public SecurityConfig(
             AuthenticationManagerBuilder authenticationManagerBuilder,
-            JwtAuthenticationProvider jsonWebTokenProvider
+            JwtAuthenticationProvider jwtAuthenticationProvider
     ) {
         this.authenticationManagerBuilder = authenticationManagerBuilder;
-        this.authenticationManagerBuilder.authenticationProvider(jsonWebTokenProvider);
+        this.authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
     }
 
     @Bean
@@ -39,14 +37,14 @@ public class SecurityConfig {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(CsrfConfigurer::disable)
-            .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                    authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").permitAll()
-                            .anyRequest().hasAnyRole(ROLE_NORMAL, ROLE_ADMIN)
-            )
-            .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                    httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .apply(new JwtSecurityConfig(authenticationManagerBuilder.getOrBuild()));
+                .csrf(CsrfConfigurer::disable)
+                .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
+                        authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").permitAll()
+                                .anyRequest().hasAnyRole(ROLE_NORMAL, ROLE_ADMIN)
+                )
+                .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .apply(new JwtSecurityConfig(authenticationManagerBuilder.getOrBuild()));
 
         return http.build();
     }

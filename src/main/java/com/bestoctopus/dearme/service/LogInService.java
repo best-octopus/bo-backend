@@ -1,5 +1,6 @@
 package com.bestoctopus.dearme.service;
 
+import com.bestoctopus.dearme.dto.JwtDto;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 
@@ -12,5 +13,7 @@ public interface LogInService {
 
     void isNicknameDuplicate(String email);
 
-    String generateToken(String userId);
+    JwtDto generateToken(String userId);
+
+    void logOut(String accessToken, String refreshToken);
 }

@@ -1,9 +1,12 @@
 package com.bestoctopus.dearme.controller;
 
+import com.bestoctopus.dearme.dto.JwtDto;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.dto.UserLogInResponseDto;
 import com.bestoctopus.dearme.service.LogInService;
+import com.bestoctopus.dearme.util.JwtIssuer;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +17,15 @@ import org.springframework.web.bind.annotation.*;
 public class LogInController {
 
     private final LogInService logInService;
+    private final JwtIssuer jwtIssuer;
+
+    private final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String REFRESH_HEADER = "Refresh";
 
     @Autowired
-    public LogInController(LogInService logInService) {
+    public LogInController(LogInService logInService, JwtIssuer jwtIssuer) {
         this.logInService = logInService;
+        this.jwtIssuer = jwtIssuer;
     }
 
     @GetMapping("/id/exists")
@@ -41,8 +49,16 @@ public class LogInController {
     @PostMapping("/login")
     public ResponseEntity<UserLogInResponseDto> logIn(@RequestBody @Valid UserLogInRequestDto userLogInDto) {
         UserDto userDto = logInService.logIn(userLogInDto);
-        String token = logInService.generateToken(userDto.getId());
+        JwtDto token = logInService.generateToken(userDto.getId());
         UserLogInResponseDto response = UserLogInResponseDto.fromEntity(userDto, token);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logOut(HttpServletRequest request) {
+        String accessToken = jwtIssuer.parseClaimsFromToken(request.getHeader(AUTHORIZATION_HEADER)).getSubject();
+        String refreshToken = jwtIssuer.parseClaimsFromToken(request.getHeader(REFRESH_HEADER)).getSubject();
+        logInService.logOut(accessToken, refreshToken);
+        return ResponseEntity.ok().body("로그아웃 완료");
     }
 }

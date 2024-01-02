@@ -24,6 +24,7 @@ public class JwtIssuer {
     private final SecretKey secretKey;
     private final SecretKey refreshSecretKey;
 
+
     public JwtIssuer(@Value("${jwt.secret}") String secretKeyPlain, @Value("${jwt.refresh-secret}") String refreshSecretKeyPlain) {
         String secretKeyBase64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
         String refreshKeyBase64Encoded = Base64.getEncoder().encodeToString(refreshSecretKeyPlain.getBytes());
@@ -35,7 +36,7 @@ public class JwtIssuer {
         Set<String> authoritySet = new HashSet<>();
         authoritySet.add(authority);
 
-        Claims claims = Jwts.claims().add("sub", userId).add(KEY_ROLES,authoritySet).build();
+        Claims claims = Jwts.claims().add("sub", userId).add(KEY_ROLES, authoritySet).build();
 
         return Jwts.builder()
                 .claims(claims)
@@ -53,7 +54,7 @@ public class JwtIssuer {
         return createToken(userId, authority, ONE_MINUTE * 120);
     }
 
-    public Claims parseClaimsFromRefreshToken(String jwt) {
+    public Claims parseClaimsFromToken(String jwt) {
         Claims claims;
         try {
             claims = Jwts.parser().verifyWith(refreshSecretKey).build().parseSignedClaims(jwt).getPayload();

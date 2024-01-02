@@ -25,7 +25,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final String KEY_ROLES = "roles";
     private SecretKey secretKey;
 
-    public JwtAuthenticationProvider(@Value("${jwt.secret}") String secretKeyPlain){
+    public JwtAuthenticationProvider(@Value("${jwt.secret}") String secretKeyPlain) {
         String keyBase64Encoded = Base64.getEncoder().encodeToString(secretKeyPlain.getBytes());
         this.secretKey = Keys.hmacShaKeyFor(keyBase64Encoded.getBytes());
     }
@@ -43,7 +43,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Claims claims;
         try {
-            claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims((String)authentication.getCredentials()).getPayload();
+            claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims((String) authentication.getCredentials()).getPayload();
         } catch (SignatureException signatureException) {
             throw new JwtInvalidException("signature key is different");
         } catch (ExpiredJwtException expiredJwtException) {
@@ -53,7 +53,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         } catch (IllegalArgumentException illegalArgumentException) {
             throw new JwtInvalidException("using illegal argument like null");
         }
-        return new JwtAuthenticationToken(claims.getSubject(), (String)authentication.getCredentials(), createGrantedAuthorities(claims));
+        return new JwtAuthenticationToken(claims.getSubject(), (String) authentication.getCredentials(), createGrantedAuthorities(claims));
     }
 
     @Override
