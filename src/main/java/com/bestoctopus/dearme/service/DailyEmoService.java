@@ -53,12 +53,20 @@ public class DailyEmoService {
         return dailyEmoRepository.save(dailyEmo);
     }
 
-    public boolean deleteDailyEmo(Long emotionId) {
+    public boolean deleteDailyEmo(Long emotionId, String user_id) {
+        User user = userRepository.findById(user_id).orElseThrow();
+
         Optional<DailyEmo> optionalDailyEmo = dailyEmoRepository.findById(emotionId);
 
         if (optionalDailyEmo.isPresent()) {
-            dailyEmoRepository.deleteById(emotionId);
-            return true;
+            DailyEmo dailyEmo = optionalDailyEmo.get();
+            if (dailyEmo.getUser().equals(user)) {
+                dailyEmoRepository.deleteById(emotionId);
+                return true;
+            }
+            else {
+                return false;
+            }
         } else {
             return false;
         }

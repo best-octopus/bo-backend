@@ -55,7 +55,9 @@ public class EmotionController {
     public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,
                                               @PathVariable("emotion_id") Long emotionId) {
 
-        boolean deleted = dailyEmoService.deleteDailyEmo(emotionId);
+        String user_id = "1";
+
+        boolean deleted = dailyEmoService.deleteDailyEmo(emotionId, user_id);
 
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.OK);
