@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/emotion")
@@ -23,10 +24,16 @@ public class EmotionController {
     private final DailyEmoService dailyEmoService;
 
     @GetMapping("")
-    public ResponseEntity<?> getEmotionList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                           @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public List<DailyEmoDto> getEmotionList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        return ResponseEntity.ok(dailyEmoService.getAllEmotionList(startDate, endDate));
+        List<DailyEmo> dailyEmoList = dailyEmoService.getAllEmotionList(startDate, endDate);
+
+        List<DailyEmoDto> dailyEmoDto = dailyEmoList.stream()
+                .map(m-> new DailyEmoDto(m.getEmotion(), m.getDate()))
+                .collect(Collectors.toList());
+
+        return dailyEmoDto;
     }
 
     @GetMapping("/count")
