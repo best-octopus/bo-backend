@@ -3,6 +3,7 @@ package com.bestoctopus.dearme.service;
 import com.bestoctopus.dearme.dto.JwtDto;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.dto.UserLogInRequestDto;
+import io.jsonwebtoken.Claims;
 
 public interface LogInService {
     UserDto logIn(UserLogInRequestDto userDto);
@@ -15,5 +16,7 @@ public interface LogInService {
 
     JwtDto generateToken(String userId);
 
-    void logOut(String accessToken, String refreshToken);
+    void logOut(String userId, String accessToken);
+
+    long getDurationMillis(long expiration);
 }

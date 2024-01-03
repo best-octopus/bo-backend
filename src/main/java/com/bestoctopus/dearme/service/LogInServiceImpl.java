@@ -7,28 +7,36 @@ import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.exception.NotValidateException;
 import com.bestoctopus.dearme.repository.UserRepository;
+import com.bestoctopus.dearme.token.JwtType;
 import com.bestoctopus.dearme.util.JwtIssuer;
+import com.bestoctopus.dearme.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.util.Date;
 
 @Service
 public class LogInServiceImpl implements LogInService {
 
     //    private final String AUTHORIZATION_HEADER = "Authorization";
     //    public final String BEARER_PREFIX = "Bearer ";
+
     private final String GRANT_TYPE_BEARER = "Bearer";
     private final String ROLE_NORMAL = "NORMAL";
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtIssuer jwtIssuer;
+    private final RedisUtil redisUtil;
 
     @Autowired
-    public LogInServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtIssuer jwtIssuer) {
+    public LogInServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtIssuer jwtIssuer, RedisUtil redisUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtIssuer = jwtIssuer;
+        this.redisUtil = redisUtil;
     }
 
     @Override
@@ -69,6 +77,9 @@ public class LogInServiceImpl implements LogInService {
     public JwtDto generateToken(String userId) {
         String accessToken = jwtIssuer.createAccessToken(userId, "ROLE_" + ROLE_NORMAL);
         String refreshToken = jwtIssuer.createRefreshToken(userId, "ROLE_" + ROLE_NORMAL);
+
+        redisUtil.save(userId, refreshToken, Duration.ofMillis(jwtIssuer.REFRESH_DURATION));
+
         return JwtDto.builder()
                 .grantType(GRANT_TYPE_BEARER)
                 .accessToken(accessToken)
@@ -77,9 +88,26 @@ public class LogInServiceImpl implements LogInService {
     }
 
     @Override
-    public void logOut(String accessToken, String refreshToken){
+    public void logOut(String userId, String accessToken) {
+        String refreshToken = redisUtil.getValues(userId);
 
+        Date accessTokenExpiration = jwtIssuer.parseClaimsFromToken(JwtType.ACCESS, accessToken).getExpiration();
+        Date refreshTokenExpiration = jwtIssuer.parseClaimsFromToken(JwtType.REFRESH, refreshToken).getExpiration();
+
+        long accessTokenMillis = getDurationMillis(accessTokenExpiration.getTime());
+        long refreshTokenMillis = getDurationMillis(refreshTokenExpiration.getTime());
+
+        redisUtil.save(accessToken, "logout", Duration.ofMillis(accessTokenMillis));
+        redisUtil.save(refreshToken, "logout", Duration.ofMillis(refreshTokenMillis));
     }
+
+    @Override
+    public long getDurationMillis(long expiration) {
+        long currentTimeMillis = System.currentTimeMillis();
+        return expiration - currentTimeMillis;
+    }
+}
+
 
 //    private String extractTokenFromRequest(HttpServletRequest request) {
 //        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -88,4 +116,3 @@ public class LogInServiceImpl implements LogInService {
 //        }
 //        return null;
 //    }
-}

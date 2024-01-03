@@ -6,6 +6,7 @@ import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.dto.UserLogInResponseDto;
 import com.bestoctopus.dearme.service.LogInService;
 import com.bestoctopus.dearme.util.JwtIssuer;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +18,13 @@ import org.springframework.web.bind.annotation.*;
 public class LogInController {
 
     private final LogInService logInService;
-    private final JwtIssuer jwtIssuer;
 
     private final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String REFRESH_HEADER = "Refresh";
+    private final String REFRESH_HEADER = "Refresh";
 
     @Autowired
-    public LogInController(LogInService logInService, JwtIssuer jwtIssuer) {
+    public LogInController(LogInService logInService) {
         this.logInService = logInService;
-        this.jwtIssuer = jwtIssuer;
     }
 
     @GetMapping("/id/exists")
@@ -52,13 +51,5 @@ public class LogInController {
         JwtDto token = logInService.generateToken(userDto.getId());
         UserLogInResponseDto response = UserLogInResponseDto.fromEntity(userDto, token);
         return ResponseEntity.ok().body(response);
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<?> logOut(HttpServletRequest request) {
-        String accessToken = jwtIssuer.parseClaimsFromToken(request.getHeader(AUTHORIZATION_HEADER)).getSubject();
-        String refreshToken = jwtIssuer.parseClaimsFromToken(request.getHeader(REFRESH_HEADER)).getSubject();
-        logInService.logOut(accessToken, refreshToken);
-        return ResponseEntity.ok().body("로그아웃 완료");
     }
 }

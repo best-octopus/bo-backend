@@ -1,6 +1,7 @@
 package com.bestoctopus.dearme.util;
 
 import com.bestoctopus.dearme.exception.JwtInvalidException;
+import com.bestoctopus.dearme.token.JwtType;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,6 +20,8 @@ import java.util.*;
 public class JwtIssuer {
     private final int ONE_SECONDS = 1000;
     private final int ONE_MINUTE = 60 * ONE_SECONDS;
+    public final int ACCESS_DURATION = 30 * ONE_MINUTE;
+    public final int REFRESH_DURATION = 240 * ONE_MINUTE;
     private final String KEY_ROLES = "roles";
 
     private final SecretKey secretKey;
@@ -32,7 +35,11 @@ public class JwtIssuer {
         this.refreshSecretKey = Keys.hmacShaKeyFor(refreshKeyBase64Encoded.getBytes());
     }
 
-    public String createToken(String userId, String authority, int expireMin) {
+    public String createToken(JwtType jwtType, String userId, String authority, int expireMin) {
+        SecretKey secretKeyForSign = secretKey;
+        if (jwtType.equals(JwtType.REFRESH)) {
+            secretKeyForSign = refreshSecretKey;
+        }
         Set<String> authoritySet = new HashSet<>();
         authoritySet.add(authority);
 
@@ -40,24 +47,28 @@ public class JwtIssuer {
 
         return Jwts.builder()
                 .claims(claims)
-                .signWith(secretKey)
+                .signWith(secretKeyForSign)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expireMin))
                 .compact();
     }
 
     public String createAccessToken(String userId, String authority) {
-        return createToken(userId, authority, ONE_MINUTE * 30);
+        return createToken(JwtType.ACCESS, userId, authority, ACCESS_DURATION);
     }
 
     public String createRefreshToken(String userId, String authority) {
-        return createToken(userId, authority, ONE_MINUTE * 120);
+        return createToken(JwtType.REFRESH, userId, authority, REFRESH_DURATION);
     }
 
-    public Claims parseClaimsFromToken(String jwt) {
-        Claims claims;
+    public Claims parseClaimsFromToken(JwtType jwtType, String token) {
+        Claims claims = null;
         try {
-            claims = Jwts.parser().verifyWith(refreshSecretKey).build().parseSignedClaims(jwt).getPayload();
+            if (jwtType.equals(JwtType.ACCESS)) {
+                claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+            } else if (jwtType.equals(JwtType.REFRESH)) {
+                claims = Jwts.parser().verifyWith(refreshSecretKey).build().parseSignedClaims(token).getPayload();
+            }
         } catch (SignatureException signatureException) {
             throw new JwtInvalidException("signature key is different");
         } catch (ExpiredJwtException expiredJwtException) {
