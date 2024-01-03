@@ -2,7 +2,10 @@ package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.DailyEmo;
 import com.bestoctopus.dearme.domain.Emotion;
+import com.bestoctopus.dearme.domain.User;
+import com.bestoctopus.dearme.dto.DailyEmoDto;
 import com.bestoctopus.dearme.repository.DailyEmoRepository;
+import com.bestoctopus.dearme.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DailyEmoService {
     private final DailyEmoRepository dailyEmoRepository;
+
+    private final UserRepository userRepository;
 
     public List<DailyEmo> getAllEmotionList(LocalDate startDate, LocalDate endDate) {
         return dailyEmoRepository.findBydateBetween(startDate, endDate);
@@ -40,7 +45,11 @@ public class DailyEmoService {
         return new ArrayList<>(emotionCountMap.entrySet());
     }
 
-    public DailyEmo postDailyEmo(DailyEmo dailyEmo) {
+    public DailyEmo postDailyEmo(DailyEmoDto dailyEmoDto, String user_id) {
+        User user = userRepository.findById(user_id).orElseThrow();
+
+        DailyEmo dailyEmo = dailyEmoDto.toEntity(user);
+
         return dailyEmoRepository.save(dailyEmo);
     }
 

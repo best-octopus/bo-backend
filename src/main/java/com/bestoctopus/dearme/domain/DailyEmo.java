@@ -27,9 +27,10 @@ public class DailyEmo {
     private Emotion emotion;
 
     @Builder
-    public DailyEmo(LocalDate date, Emotion emotion) {
+    public DailyEmo(LocalDate date, Emotion emotion, User user) {
         this.date = date;
         this.emotion = emotion;
+        this.user = user;
     }
 
     public void update(Emotion emotion) {
