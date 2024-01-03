@@ -17,6 +17,4 @@ public interface LogInService {
     JwtDto generateToken(String userId);
 
     void logOut(String userId, String accessToken);
-
-    long getDurationMillis(long expiration);
 }

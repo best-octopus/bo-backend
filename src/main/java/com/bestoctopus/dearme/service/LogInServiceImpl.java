@@ -98,8 +98,7 @@ public class LogInServiceImpl implements LogInService {
         redisUtil.save(refreshToken, "logout", Duration.ofMillis(refreshTokenMillis));
     }
 
-    @Override
-    public long getDurationMillis(long expiration) {
+    private long getDurationMillis(long expiration) {
         long currentTimeMillis = System.currentTimeMillis();
         return expiration - currentTimeMillis;
     }
