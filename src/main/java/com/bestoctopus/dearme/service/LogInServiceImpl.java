@@ -4,6 +4,7 @@ import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.JwtDto;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.dto.UserLogInRequestDto;
+import com.bestoctopus.dearme.exception.JwtInvalidException;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.exception.NotValidateException;
 import com.bestoctopus.dearme.repository.UserRepository;
@@ -96,6 +97,15 @@ public class LogInServiceImpl implements LogInService {
 
         redisUtil.save(accessToken, "logout", Duration.ofMillis(accessTokenMillis));
         redisUtil.save(refreshToken, "logout", Duration.ofMillis(refreshTokenMillis));
+    }
+
+    @Override
+    public String reIssue(String refreshToken) {
+        String userId = jwtIssuer.parseClaimsFromToken(JwtType.REFRESH, refreshToken).getSubject();
+        if (redisUtil.getValues(refreshToken) != null && redisUtil.getValues(refreshToken).equals("logout")) {
+            throw new JwtInvalidException("로그아웃한 유저");
+        }
+        return jwtIssuer.createAccessToken(userId, "ROLE_" + Role.NORMAL.getRole());
     }
 
     private long getDurationMillis(long expiration) {

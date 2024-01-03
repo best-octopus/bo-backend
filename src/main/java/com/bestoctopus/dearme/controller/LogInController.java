@@ -4,6 +4,7 @@ import com.bestoctopus.dearme.dto.JwtDto;
 import com.bestoctopus.dearme.dto.UserDto;
 import com.bestoctopus.dearme.dto.UserLogInRequestDto;
 import com.bestoctopus.dearme.dto.UserLogInResponseDto;
+import com.bestoctopus.dearme.exception.JwtInvalidException;
 import com.bestoctopus.dearme.service.LogInService;
 import com.bestoctopus.dearme.util.JwtIssuer;
 import io.jsonwebtoken.Claims;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -48,5 +51,16 @@ public class LogInController {
         JwtDto token = logInService.generateToken(userDto.getId());
         UserLogInResponseDto response = UserLogInResponseDto.fromEntity(userDto, token);
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/reissue")
+    public ResponseEntity<String> reIssue(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Refresh");
+        if (!StringUtils.hasText(bearerToken) || !bearerToken.startsWith("Bearer ")) {
+            throw new JwtInvalidException("refresh-token is invalid");
+        }
+        String refreshToken = bearerToken.substring(7);
+        String accessToken = logInService.reIssue(refreshToken);
+        return ResponseEntity.ok().body(accessToken);
     }
 }

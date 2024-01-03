@@ -17,4 +17,6 @@ public interface LogInService {
     JwtDto generateToken(String userId);
 
     void logOut(String userId, String accessToken);
+
+    String reIssue(String refreshToken);
 }
