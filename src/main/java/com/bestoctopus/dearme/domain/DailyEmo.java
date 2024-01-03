@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "daily")
 @Getter
+@NoArgsConstructor
 public class DailyEmo {
 
     @Id
