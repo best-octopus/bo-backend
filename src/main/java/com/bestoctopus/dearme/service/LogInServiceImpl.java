@@ -8,6 +8,7 @@ import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.exception.NotValidateException;
 import com.bestoctopus.dearme.repository.UserRepository;
 import com.bestoctopus.dearme.token.JwtType;
+import com.bestoctopus.dearme.token.Role;
 import com.bestoctopus.dearme.util.JwtIssuer;
 import com.bestoctopus.dearme.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,7 @@ import java.util.Date;
 @Service
 public class LogInServiceImpl implements LogInService {
 
-    //    private final String AUTHORIZATION_HEADER = "Authorization";
-    //    public final String BEARER_PREFIX = "Bearer ";
-
     private final String GRANT_TYPE_BEARER = "Bearer";
-    private final String ROLE_NORMAL = "NORMAL";
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -75,8 +72,8 @@ public class LogInServiceImpl implements LogInService {
 
     @Override
     public JwtDto generateToken(String userId) {
-        String accessToken = jwtIssuer.createAccessToken(userId, "ROLE_" + ROLE_NORMAL);
-        String refreshToken = jwtIssuer.createRefreshToken(userId, "ROLE_" + ROLE_NORMAL);
+        String accessToken = jwtIssuer.createAccessToken(userId, "ROLE_" + Role.NORMAL.getRole());
+        String refreshToken = jwtIssuer.createRefreshToken(userId, "ROLE_" + Role.ADMIN.getRole());
 
         redisUtil.save(userId, refreshToken, Duration.ofMillis(jwtIssuer.REFRESH_DURATION));
 

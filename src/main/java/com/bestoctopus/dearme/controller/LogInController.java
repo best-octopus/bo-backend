@@ -19,9 +19,6 @@ public class LogInController {
 
     private final LogInService logInService;
 
-    private final String AUTHORIZATION_HEADER = "Authorization";
-    private final String REFRESH_HEADER = "Refresh";
-
     @Autowired
     public LogInController(LogInService logInService) {
         this.logInService = logInService;

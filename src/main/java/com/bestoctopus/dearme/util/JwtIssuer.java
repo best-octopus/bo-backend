@@ -18,10 +18,12 @@ import java.util.*;
 @Component
 @PropertySource("classpath:application-secret.properties")
 public class JwtIssuer {
-    private final int ONE_SECONDS = 1000;
-    private final int ONE_MINUTE = 60 * ONE_SECONDS;
-    public final int ACCESS_DURATION = 30 * ONE_MINUTE;
-    public final int REFRESH_DURATION = 240 * ONE_MINUTE;
+    private static final int ONE_SECONDS = 1000;
+    private static final int ONE_MINUTE = 60 * ONE_SECONDS;
+    public static final int ACCESS_DURATION = 30 * ONE_MINUTE;
+    public static final int REFRESH_DURATION = 240 * ONE_MINUTE;
+    //시간
+
     private final String KEY_ROLES = "roles";
 
     private final SecretKey secretKey;

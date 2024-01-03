@@ -1,6 +1,7 @@
 package com.bestoctopus.dearme.config;
 
 import com.bestoctopus.dearme.token.JwtAuthenticationProvider;
+import com.bestoctopus.dearme.token.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,9 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
-    private final String ROLE_ADMIN = "ADMIN";
-    private final String ROLE_NORMAL = "NORMAL";
-
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     public SecurityConfig(
@@ -40,7 +38,7 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").permitAll()
-                                .anyRequest().hasAnyRole(ROLE_NORMAL, ROLE_ADMIN)
+                                .anyRequest().hasAnyRole(Role.ADMIN.getRole(), Role.NORMAL.getRole())
                 )
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
