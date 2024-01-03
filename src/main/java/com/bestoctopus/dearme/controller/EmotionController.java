@@ -42,6 +42,8 @@ public class EmotionController {
 
         List<DailyEmo> dailyEmo = dailyEmoService.getAllEmotionList(startDate, endDate);
 
+
+
         return dailyEmoService.getEmotionCount(dailyEmo);
     }
 
