@@ -50,20 +50,6 @@ public class EmotionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/{emotion_id}")
-    public ResponseEntity<?> putEmotion ( // @RequestHeader("Authorization") String accessToken,
-                                          @PathVariable("emotion_id") Long emotionId,
-                                          @RequestParam("emotion") Emotion emotion) {
-
-        boolean updated = dailyEmoService.putDailyEmo(emotionId, emotion);
-
-        if (updated) {
-            return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
 
     @DeleteMapping("/{emotion_id}")
     public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,

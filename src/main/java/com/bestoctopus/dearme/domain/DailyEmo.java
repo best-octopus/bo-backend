@@ -32,8 +32,4 @@ public class DailyEmo {
         this.emotion = emotion;
         this.user = user;
     }
-
-    public void update(Emotion emotion) {
-        if (emotion != null) this.emotion = emotion;
-    }
 }

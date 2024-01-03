@@ -53,19 +53,6 @@ public class DailyEmoService {
         return dailyEmoRepository.save(dailyEmo);
     }
 
-    public boolean putDailyEmo(Long emotionId, Emotion emotion) {
-        Optional<DailyEmo> optionalDailyEmo = dailyEmoRepository.findById(emotionId);
-
-        if (optionalDailyEmo.isPresent()) {
-            DailyEmo dailyEmo = optionalDailyEmo.get();
-            dailyEmo.update(emotion);
-            dailyEmoRepository.save(dailyEmo);
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public boolean deleteDailyEmo(Long emotionId) {
         Optional<DailyEmo> optionalDailyEmo = dailyEmoRepository.findById(emotionId);
 
