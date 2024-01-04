@@ -4,12 +4,14 @@ import com.bestoctopus.dearme.dto.PutBucketListDto;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "daily")
 @Getter
+@NoArgsConstructor
 public class DailyEmo {
 
     @Id
@@ -27,12 +29,9 @@ public class DailyEmo {
     private Emotion emotion;
 
     @Builder
-    public DailyEmo(LocalDate date, Emotion emotion) {
+    public DailyEmo(LocalDate date, Emotion emotion, User user) {
         this.date = date;
         this.emotion = emotion;
-    }
-
-    public void update(Emotion emotion) {
-        if (emotion != null) this.emotion = emotion;
+        this.user = user;
     }
 }
