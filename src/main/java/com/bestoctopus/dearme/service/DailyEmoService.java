@@ -2,10 +2,7 @@ package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.DailyEmo;
 import com.bestoctopus.dearme.domain.Emotion;
-import com.bestoctopus.dearme.domain.User;
-import com.bestoctopus.dearme.dto.DailyEmoDto;
 import com.bestoctopus.dearme.repository.DailyEmoRepository;
-import com.bestoctopus.dearme.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +15,6 @@ import java.util.*;
 @RequiredArgsConstructor
 public class DailyEmoService {
     private final DailyEmoRepository dailyEmoRepository;
-
-    private final UserRepository userRepository;
 
     public List<DailyEmo> getAllEmotionList(LocalDate startDate, LocalDate endDate) {
         return dailyEmoRepository.findBydateBetween(startDate, endDate);
@@ -45,33 +40,32 @@ public class DailyEmoService {
         return new ArrayList<>(emotionCountMap.entrySet());
     }
 
-    public DailyEmo postDailyEmo(DailyEmoDto dailyEmoDto, String user_id) {
-        User user = userRepository.findById(user_id).orElseThrow();
-
-        DailyEmo dailyEmo = dailyEmoDto.toEntity(user);
-
+    public DailyEmo postDailyEmo(DailyEmo dailyEmo) {
         return dailyEmoRepository.save(dailyEmo);
     }
 
-    /*
-    public boolean deleteDailyEmo(Long emotionId, String user_id) {
-        User user = userRepository.findById(user_id).orElseThrow();
-
+    public boolean putDailyEmo(Long emotionId, Emotion emotion) {
         Optional<DailyEmo> optionalDailyEmo = dailyEmoRepository.findById(emotionId);
 
         if (optionalDailyEmo.isPresent()) {
             DailyEmo dailyEmo = optionalDailyEmo.get();
-            if (dailyEmo.getUser().equals(user)) {
-                dailyEmoRepository.deleteById(emotionId);
-                return true;
-            }
-            else {
-                return false;
-            }
+            dailyEmo.update(emotion);
+            dailyEmoRepository.save(dailyEmo);
+            return true;
         } else {
             return false;
         }
     }
-     */
+
+    public boolean deleteDailyEmo(Long emotionId) {
+        Optional<DailyEmo> optionalDailyEmo = dailyEmoRepository.findById(emotionId);
+
+        if (optionalDailyEmo.isPresent()) {
+            dailyEmoRepository.deleteById(emotionId);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
