@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/emotion")
@@ -25,25 +24,18 @@ public class EmotionController {
 
     @GetMapping("")
     public ResponseEntity<?> getEmotionList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                           @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
-        List<DailyEmo> dailyEmoList = dailyEmoService.getAllEmotionList(startDate, endDate);
-
-        List<DailyEmoDto> dailyEmoDto = dailyEmoList.stream()
-                .map(m-> new DailyEmoDto(m.getEmotion(), m.getDate()))
-                .collect(Collectors.toList());
-
-
-        return ResponseEntity.ok(dailyEmoDto);
+        return ResponseEntity.ok(dailyEmoService.getAllEmotionList(startDate, endDate));
     }
 
     @GetMapping("/count")
-    public ResponseEntity<List<Map.Entry<Emotion, Integer>>> getEmotionCount(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public List<Map.Entry<Emotion, Integer>> getEmotionCount(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         List<DailyEmo> dailyEmo = dailyEmoService.getAllEmotionList(startDate, endDate);
 
-        return ResponseEntity.ok(dailyEmoService.getEmotionCount(dailyEmo));
+        return dailyEmoService.getEmotionCount(dailyEmo);
     }
 
 
@@ -51,21 +43,31 @@ public class EmotionController {
     public ResponseEntity<?> postEmotion( // @RequestHeader("Authorization") String accessToken,
                                              @RequestBody @Valid DailyEmoDto dailyEmoDto) {
 
-        String user_id = "1";
-
-        dailyEmoService.postDailyEmo(dailyEmoDto, user_id);
+        dailyEmoService.postDailyEmo(dailyEmoDto.toEntity());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    /*
+    @PutMapping("/{emotion_id}")
+    public ResponseEntity<?> putEmotion ( // @RequestHeader("Authorization") String accessToken,
+                                          @PathVariable("emotion_id") Long emotionId,
+                                          @RequestParam("emotion") Emotion emotion) {
+
+        boolean updated = dailyEmoService.putDailyEmo(emotionId, emotion);
+
+        if (updated) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     @DeleteMapping("/{emotion_id}")
     public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,
                                               @PathVariable("emotion_id") Long emotionId) {
 
-        String user_id = "1";
-
-        boolean deleted = dailyEmoService.deleteDailyEmo(emotionId, user_id);
+        boolean deleted = dailyEmoService.deleteDailyEmo(emotionId);
 
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -73,5 +75,4 @@ public class EmotionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    */
 }
