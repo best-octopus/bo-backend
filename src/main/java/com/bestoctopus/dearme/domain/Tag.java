@@ -4,17 +4,20 @@ import com.bestoctopus.dearme.domain.relation.BookReviewTagRelation;
 import com.bestoctopus.dearme.domain.relation.MemoTagRelation;
 import com.bestoctopus.dearme.domain.relation.UserTagRelation;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "tag")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     //태그 주제 넣기
