@@ -40,7 +40,7 @@ public class EmotionController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> postEmotion( // @RequestHeader("Authorization") String accessToken,
+    public ResponseEntity<?> postEmotion( // @RequestHeader("Authorization") String String,
                                              @RequestBody @Valid DailyEmoDto dailyEmoDto) {
 
         dailyEmoService.postDailyEmo(dailyEmoDto.toEntity());

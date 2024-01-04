@@ -2,18 +2,21 @@ package com.bestoctopus.dearme.domain;
 
 import com.bestoctopus.dearme.dto.PutBucketListDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "bucket_list")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BucketList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -23,7 +26,6 @@ public class BucketList {
     @Column(nullable = false)
     private Boolean status;
 
-
     @Column(length = 30, nullable = false)
     private String goal;
 
@@ -32,7 +34,7 @@ public class BucketList {
 
 
     @Builder
-    public BucketList(boolean status, String goal, LocalDate date) {
+    public BucketList(Boolean status, String goal, LocalDate date) {
         this.status = status;
         this.goal = goal;
         this.date = date;
