@@ -24,7 +24,7 @@ public class EmotionController {
     private final DailyEmoService dailyEmoService;
 
     @GetMapping("")
-    public List<DailyEmoDto> getEmotionList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+    public ResponseEntity<?> getEmotionList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         List<DailyEmo> dailyEmoList = dailyEmoService.getAllEmotionList(startDate, endDate);
@@ -33,18 +33,17 @@ public class EmotionController {
                 .map(m-> new DailyEmoDto(m.getEmotion(), m.getDate()))
                 .collect(Collectors.toList());
 
-        return dailyEmoDto;
+
+        return ResponseEntity.ok(dailyEmoDto);
     }
 
     @GetMapping("/count")
-    public List<Map.Entry<Emotion, Integer>> getEmotionCount(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public ResponseEntity<List<Map.Entry<Emotion, Integer>>> getEmotionCount(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                                                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         List<DailyEmo> dailyEmo = dailyEmoService.getAllEmotionList(startDate, endDate);
 
-
-
-        return dailyEmoService.getEmotionCount(dailyEmo);
+        return ResponseEntity.ok(dailyEmoService.getEmotionCount(dailyEmo));
     }
 
 
