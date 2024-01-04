@@ -53,6 +53,7 @@ public class DailyEmoService {
         return dailyEmoRepository.save(dailyEmo);
     }
 
+    /*
     public boolean deleteDailyEmo(Long emotionId, String user_id) {
         User user = userRepository.findById(user_id).orElseThrow();
 
@@ -71,5 +72,6 @@ public class DailyEmoService {
             return false;
         }
     }
+     */
 
 }

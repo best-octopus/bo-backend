@@ -59,7 +59,7 @@ public class EmotionController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-
+    /*
     @DeleteMapping("/{emotion_id}")
     public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,
                                               @PathVariable("emotion_id") Long emotionId) {
@@ -74,4 +74,5 @@ public class EmotionController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    */
 }
