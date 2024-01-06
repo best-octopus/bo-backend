@@ -2,8 +2,10 @@ package com.bestoctopus.dearme.domain;
 
 import com.bestoctopus.dearme.domain.relation.MemoTagRelation;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,9 +13,10 @@ import java.util.List;
 @Entity
 @Table(name = "memo")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Memo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

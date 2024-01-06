@@ -3,8 +3,10 @@ package com.bestoctopus.dearme.domain;
 import com.bestoctopus.dearme.domain.relation.BookReviewTagRelation;
 import com.bestoctopus.dearme.domain.relation.LikeRelation;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.awt.print.Book;
 import java.time.LocalDate;
@@ -14,9 +16,10 @@ import java.util.Set;
 @Entity
 @Table(name = "book_review")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookReview {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -2,6 +2,7 @@ package com.bestoctopus.dearme.domain;
 
 import com.bestoctopus.dearme.dto.PutBucketListDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,11 +12,11 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "daily")
 @Getter
-@NoArgsConstructor
-public class DailyEmo {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
+public class DailyEmo {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,9 +30,10 @@ public class DailyEmo {
     private Emotion emotion;
 
     @Builder
-    public DailyEmo(LocalDate date, Emotion emotion) {
+    public DailyEmo(LocalDate date, Emotion emotion, User user) {
         this.date = date;
         this.emotion = emotion;
+        this.user = user;
     }
 
     public void update(Emotion emotion) {

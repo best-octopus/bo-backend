@@ -12,11 +12,12 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "bucket_list")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class BucketList {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -25,7 +26,6 @@ public class BucketList {
 
     @Column(nullable = false)
     private Boolean status;
-
 
     @Column(length = 30, nullable = false)
     private String goal;
