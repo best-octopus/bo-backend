@@ -34,7 +34,7 @@ public class BucketListController {
     private final UserRepository userRepository;
 
     @GetMapping("")
-    public List<BucketListDto> getBucketList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+    public ResponseEntity<?> getBucketList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                              @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
 
         List<BucketList> bucketLists = bucketListService.getAllBucketList(startDate, endDate);
@@ -43,7 +43,7 @@ public class BucketListController {
                 .map(m-> new BucketListDto(m.getStatus(), m.getGoal(), m.getDate()))
                 .collect(Collectors.toList());
 
-        return collect;
+        return ResponseEntity.ok(collect);
     }
 
 
