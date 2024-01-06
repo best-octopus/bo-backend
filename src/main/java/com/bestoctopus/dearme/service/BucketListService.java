@@ -58,11 +58,16 @@ public class BucketListService {
     }
 
 
-    public boolean deleteBucketList(Long bucketId) {
+    public boolean deleteBucketList(Long bucketId, String user_id) {
+        User user = userRepository.findById(user_id).orElseThrow();
+
         Optional<BucketList> optionalBucketList = bucketListRepository.findById(bucketId);
 
-        if (optionalBucketList.isPresent()) { //bucketId가 존재할 경우에만 delete 실행
-            bucketListRepository.deleteById(bucketId);
+        if (optionalBucketList.isPresent()) {
+            BucketList bucketList = optionalBucketList.get();
+            if (user.equals(bucketList.getUser())) {
+                bucketListRepository.deleteById(bucketId);
+            }
             return true;
         } else {
             return false;

@@ -80,7 +80,9 @@ public class BucketListController {
     public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,
                                       @PathVariable("bucket_id") Long bucketId) {
 
-        boolean deleted = bucketListService.deleteBucketList(bucketId);
+        String user_id = "1";
+
+        boolean deleted = bucketListService.deleteBucketList(bucketId, user_id);
 
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.OK);
