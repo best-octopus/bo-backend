@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Table(name = "bucket_list")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 public class BucketList {
 
     @Id
@@ -34,14 +35,14 @@ public class BucketList {
 
 
     @Builder
-    public BucketList(Boolean status, String goal, LocalDate date) {
+    public BucketList(boolean status, String goal, LocalDate date, User user_id) {
         this.status = status;
         this.goal = goal;
         this.date = date;
+        this.user = user_id;
     }
 
-    public void update(PutBucketListDto putBucketListDto) {
-        if (putBucketListDto.getStatus() != null) this.status = putBucketListDto.getStatus();
-        if (putBucketListDto.getGoal() != null) this.goal = putBucketListDto.getGoal();
+    public void update(Boolean status) {
+        this.status = status;
     }
 }

@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.awt.print.Book;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -31,7 +33,7 @@ public class BookReview {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime lastEditTime;
+    private LocalDate lastEditTime;
 
     @OneToOne(mappedBy = "bookReview")
     private BookInform bookInform;
@@ -41,4 +43,12 @@ public class BookReview {
 
     @OneToMany(mappedBy = "bookReview")
     private Set<LikeRelation> likes;
+
+    @Builder
+    public BookReview (Long id, String title, String content, LocalDate lastEditTime) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.lastEditTime = lastEditTime;
+    }
 }
