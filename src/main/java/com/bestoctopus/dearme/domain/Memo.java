@@ -38,4 +38,12 @@ public class Memo {
 
     @OneToMany(mappedBy = "memo")
     private List<MemoTagRelation> tags;
+
+    @Builder
+    public Memo(Status status, LocalDate date, User user) {
+        this.status = status;
+        this.date = date;
+        this.user = user;
+    }
+
 }
