@@ -14,6 +14,8 @@ import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,24 +50,26 @@ public class BucketListController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> PostBucketList( // @RequestHeader("Authorization") String accessToken,
-                                             @RequestBody @Valid BucketListDto bucketListDto) {
+    public ResponseEntity<?> PostBucketList(@RequestBody @Valid BucketListDto bucketListDto) {
 
-        String user_id = "1";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        bucketListService.postBucketList(bucketListDto, user_id);
+        String userId = (String)authentication.getPrincipal();
+
+        bucketListService.postBucketList(bucketListDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @PutMapping("/{bucket_id}")
-    public ResponseEntity<?> putBucketList(//@RequestHeader("Authorization") String accessToken,
-                                          @PathVariable("bucket_id") Long bucketId) {
+    public ResponseEntity<?> putBucketList(@PathVariable("bucket_id") Long bucketId) {
 
-        String user_id = "1";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        boolean updated = bucketListService.putBucketList(bucketId, user_id);
+        String userId = (String)authentication.getPrincipal();
+
+        boolean updated = bucketListService.putBucketList(bucketId, userId);
 
         if (updated) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -77,12 +81,13 @@ public class BucketListController {
 
 
     @DeleteMapping("/{bucket_id}")
-    public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,
-                                      @PathVariable("bucket_id") Long bucketId) {
+    public ResponseEntity<?> deleteBucketList(@PathVariable("bucket_id") Long bucketId) {
 
-        String user_id = "1";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        boolean deleted = bucketListService.deleteBucketList(bucketId, user_id);
+        String userId = (String)authentication.getPrincipal();
+
+        boolean deleted = bucketListService.deleteBucketList(bucketId, userId);
 
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.OK);

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -47,11 +49,13 @@ public class EmotionController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> postEmotion( // @RequestHeader("Authorization") String String,
-                                             @RequestBody @Valid DailyEmoDto dailyEmoDto) {
+    public ResponseEntity<?> postEmotion(@RequestBody @Valid DailyEmoDto dailyEmoDto) {
 
-        String user_id = "1";
-        dailyEmoService.postDailyEmo(dailyEmoDto, user_id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String userId = (String)authentication.getPrincipal();
+
+        dailyEmoService.postDailyEmo(dailyEmoDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
