@@ -2,6 +2,7 @@ package com.bestoctopus.dearme.controller;
 
 
 import com.bestoctopus.dearme.domain.Memo;
+import com.bestoctopus.dearme.dto.GetMemoDto;
 import com.bestoctopus.dearme.dto.MemoDto;
 import com.bestoctopus.dearme.service.MemoService;
 import jakarta.validation.Valid;
@@ -24,18 +25,18 @@ public class MemoController {
 
     private final MemoService memoService;
 
-//    @GetMapping("")
-//    public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-//                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-//
-//        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
-//
-//        List<MemoDto> memoDto = memoList.stream()
-//                .map(m-> new MemoDto(m.getStatus(), m.getDate()))
-//                .collect(Collectors.toList());
-//
-//        return ResponseEntity.ok(memoDto);
-//    }
+    @GetMapping("")
+    public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
+
+        List<GetMemoDto> getMemoDto = memoList.stream()
+                .map(m-> new GetMemoDto(m.getStatus(), m.getDate()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(getMemoDto);
+    }
 
 
     @PostMapping("")
