@@ -18,10 +18,13 @@ public class MemoDto {
 
     private LocalDate date;
 
+    private String content;
+
     public Memo toEntity(User user){
         return Memo.builder()
                 .status(this.status)
                 .date(this.date)
+                .content(this.content)
                 .user(user)
                 .build();
 

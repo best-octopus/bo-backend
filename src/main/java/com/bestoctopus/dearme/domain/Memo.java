@@ -40,9 +40,10 @@ public class Memo {
     private List<MemoTagRelation> tags;
 
     @Builder
-    public Memo(Status status, LocalDate date, User user) {
+    public Memo(Status status, LocalDate date, String content, User user) {
         this.status = status;
         this.date = date;
+        this.content = content;
         this.user = user;
     }
 

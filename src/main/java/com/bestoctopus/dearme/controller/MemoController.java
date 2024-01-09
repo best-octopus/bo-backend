@@ -4,13 +4,14 @@ package com.bestoctopus.dearme.controller;
 import com.bestoctopus.dearme.domain.Memo;
 import com.bestoctopus.dearme.dto.MemoDto;
 import com.bestoctopus.dearme.service.MemoService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -23,16 +24,28 @@ public class MemoController {
 
     private final MemoService memoService;
 
-    @GetMapping("")
-    public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+//    @GetMapping("")
+//    public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+//                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+//
+//        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
+//
+//        List<MemoDto> memoDto = memoList.stream()
+//                .map(m-> new MemoDto(m.getStatus(), m.getDate()))
+//                .collect(Collectors.toList());
+//
+//        return ResponseEntity.ok(memoDto);
+//    }
 
-        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
 
-        List<MemoDto> memoDto = memoList.stream()
-                .map(m-> new MemoDto(m.getStatus(), m.getDate()))
-                .collect(Collectors.toList());
+    @PostMapping("")
+    public ResponseEntity<?> postMemo(@RequestBody @Valid MemoDto memoDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return ResponseEntity.ok(memoDto);
+        String userId = (String)authentication.getPrincipal();
+
+        memoService.postMemo(memoDto, userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
