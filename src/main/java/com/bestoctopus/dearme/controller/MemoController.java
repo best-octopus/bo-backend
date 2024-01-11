@@ -66,4 +66,20 @@ public class MemoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @DeleteMapping("/{memo_id}")
+    public ResponseEntity<?> deleteMemo(@PathVariable("memo_id") Long memoId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String)authentication.getPrincipal();
+
+        boolean deleted = memoService.deleteMemo(memoId, userId);
+
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

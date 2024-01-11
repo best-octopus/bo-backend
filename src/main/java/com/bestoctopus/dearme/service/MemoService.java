@@ -51,4 +51,25 @@ public class MemoService {
             return false;
         }
     }
+
+
+    public boolean deleteMemo(Long memo_id, String user_id) {
+        User user = userRepository.findById(user_id).orElseThrow();
+
+        Optional<Memo> optionalMemo = memoRepository.findById(memo_id);
+
+        if (optionalMemo.isPresent()) {
+            Memo memo = optionalMemo.get();
+
+            if (memo.getUser().equals(user)) {
+                memoRepository.deleteById(memo_id);
+                return true;
+            }
+            else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
