@@ -39,6 +39,18 @@ public class MemoController {
         return ResponseEntity.ok(getMemoDto);
     }
 
+    @GetMapping("/{memo_id}")
+    public ResponseEntity<?> getMemo(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                         @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+
+        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
+
+        List<MemoDto> memoDto = memoList.stream()
+                .map(m-> new MemoDto(m.getStatus(), m.getDate(), m.getContent()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(memoDto);
+    }
 
     @PostMapping("")
     public ResponseEntity<?> postMemo(@RequestBody @Valid MemoDto memoDto) {
