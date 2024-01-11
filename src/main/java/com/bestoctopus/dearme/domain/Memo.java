@@ -1,6 +1,7 @@
 package com.bestoctopus.dearme.domain;
 
 import com.bestoctopus.dearme.domain.relation.MemoTagRelation;
+import com.bestoctopus.dearme.dto.PutMemoDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "memo")
@@ -37,7 +39,7 @@ public class Memo {
     private Status status;
 
     @OneToMany(mappedBy = "memo")
-    private List<MemoTagRelation> tags;
+    private Set<MemoTagRelation> tags;
 
     @Builder
     public Memo(Status status, LocalDate date, String content, User user) {
@@ -47,4 +49,9 @@ public class Memo {
         this.user = user;
     }
 
+
+    public void update(PutMemoDto putMemoDto) {
+        this.content = putMemoDto.getContent();
+        this.status = putMemoDto.getStatus();
+    }
 }

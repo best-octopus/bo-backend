@@ -4,6 +4,7 @@ package com.bestoctopus.dearme.controller;
 import com.bestoctopus.dearme.domain.Memo;
 import com.bestoctopus.dearme.dto.GetMemoDto;
 import com.bestoctopus.dearme.dto.MemoDto;
+import com.bestoctopus.dearme.dto.PutMemoDto;
 import com.bestoctopus.dearme.service.MemoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,21 @@ public class MemoController {
         memoService.postMemo(memoDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/{memo_id}")
+    public ResponseEntity<?> putMemo(@PathVariable("memo_id") Long memoId,
+                                     @RequestBody @Valid PutMemoDto putMemoDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String userId = (String)authentication.getPrincipal();
+
+        boolean updated = memoService.putMemo(memoId, userId, putMemoDto);
+
+        if (updated) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
