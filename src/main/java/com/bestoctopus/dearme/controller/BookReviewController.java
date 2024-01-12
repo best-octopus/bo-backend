@@ -5,10 +5,7 @@ import com.bestoctopus.dearme.dto.BookReviewDto;
 import com.bestoctopus.dearme.service.BookReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,10 +15,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BookReviewController {
 
-    private final BookReviewService bookReviewListService;
+    private final BookReviewService bookReviewService;
 
     @PostMapping
-    public ResponseEntity<?> saveBookData(){
+    public ResponseEntity<?> saveBookData(@RequestBody BookReviewDto bookReviewDto){
+        bookReviewService.saveBookdata();
         return ResponseEntity.ok().body();
     }
 

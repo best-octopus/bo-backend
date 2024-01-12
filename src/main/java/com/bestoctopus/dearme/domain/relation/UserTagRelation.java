@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_tag_realtion")
+@Table(name = "user_tag_relation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserTagRelation {

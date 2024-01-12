@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -33,20 +34,23 @@ public class BookReview {
     @Column(nullable = false)
     private LocalDate lastEditTime;
 
-    @OneToOne(mappedBy = "bookReview")
-    private BookInform bookInform;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_data_id", nullable = false)
+    private BookData bookData;
 
     @OneToMany(mappedBy = "bookReview")
-    private Set<BookReviewTagRelation> tags;
+    private final Set<BookReviewTagRelation> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "bookReview")
-    private Set<LikeRelation> likes;
+    private final Set<LikeRelation> likes = new HashSet<>();
 
     @Builder
-    public BookReview(Long id, String title, String content, LocalDate lastEditTime) {
+    public BookReview(Long id, User user, String title, String content, LocalDate lastEditTime, BookData bookData) {
         this.id = id;
+        this.user = user;
         this.title = title;
         this.content = content;
         this.lastEditTime = lastEditTime;
+        this.bookData = bookData;
     }
 }

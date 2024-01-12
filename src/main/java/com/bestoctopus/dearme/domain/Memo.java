@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -36,6 +37,6 @@ public class Memo {
     @Column(nullable = false)
     private Status status;
 
-    @OneToMany(mappedBy = "memo")
-    private List<MemoTagRelation> tags;
+    @OneToMany(mappedBy = "memo",fetch = FetchType.LAZY)
+    private final List<MemoTagRelation> tags = new ArrayList<>();
 }

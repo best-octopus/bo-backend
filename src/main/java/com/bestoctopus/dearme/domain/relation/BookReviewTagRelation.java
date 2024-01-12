@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import java.awt.print.Book;
 
 @Entity
-@Table(name = "book_review_tag_realtion")
+@Table(name = "book_review_tag_relation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BookReviewTagRelation {
