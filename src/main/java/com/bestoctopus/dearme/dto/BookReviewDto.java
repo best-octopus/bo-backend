@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
-public class BookReviewListDto {
+public class BookReviewDto {
     private final Long id;
 
     private String reviewTitle;
@@ -26,7 +26,7 @@ public class BookReviewListDto {
     private final LocalDate lastEditTime;
 
 
-    public BookReviewListDto(BookReview bookreview) {
+    public BookReviewDto(BookReview bookreview) {
         this.id = bookreview.getId();
         this.reviewTitle = bookreview.getTitle();
         this.contents = bookreview.getContent();

@@ -1,21 +1,20 @@
 package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.BookReview;
-import com.bestoctopus.dearme.repository.BookReviewListRepository;
+import com.bestoctopus.dearme.repository.BookReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class BookReviewListService {
+public class BookReviewService {
 
-    private final BookReviewListRepository bookReviewListRepository;
+    private final BookReviewRepository bookReviewListRepository;
 
     public List<BookReview> getAllBookReviewList() {
         return bookReviewListRepository.findAll();
