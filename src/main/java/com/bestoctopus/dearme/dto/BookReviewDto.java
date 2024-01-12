@@ -1,7 +1,5 @@
 package com.bestoctopus.dearme.dto;
 
-
-
 import com.bestoctopus.dearme.domain.BookReview;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

@@ -35,7 +35,7 @@ public class User {
     private final Set<BucketList> bucketLists = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private Set<BookReview> bookReviews = new HashSet<>();
+    private final Set<BookReview> bookReviews = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private final Set<Memo> memos = new HashSet<>();
