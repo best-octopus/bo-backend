@@ -6,20 +6,13 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class BookReviewService {
+    private final BookReviewRepository bookReviewtRepository;
 
-    private final BookReviewRepository bookReviewListRepository;
-
-    public List<BookReview> getAllBookReviewList() {
-        return bookReviewListRepository.findAll();
-    }
-
-
-
+//    public List<BookReview> getAllBookReviewList() {
+//        return bookReviewListRepository.findAll();
+//    }
 }

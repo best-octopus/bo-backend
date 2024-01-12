@@ -25,13 +25,13 @@ public class BookReviewController {
         return ResponseEntity.ok().body();
     }
 
-    @GetMapping
-    public List<BookReviewDto> getBookReviewList() {
-        return bookReviewListService.getAllBookReviewList().stream()
-                .map(BookReviewDto::new)
-                .collect(Collectors.toList());
-
-
-    }
+//    @GetMapping
+//    public List<BookReviewDto> getBookReviewList() {
+//        return bookReviewListService.getAllBookReviewList().stream()
+//                .map(BookReviewDto::new)
+//                .collect(Collectors.toList());
+//
+//
+//    }
 
 }
