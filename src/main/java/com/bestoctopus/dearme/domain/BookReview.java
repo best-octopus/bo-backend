@@ -16,12 +16,12 @@ import java.util.Set;
 @Table(name = "book_review")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookReview {
+public class BookReview extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -45,12 +45,11 @@ public class BookReview {
     private final Set<LikeRelation> likes = new HashSet<>();
 
     @Builder
-    public BookReview(Long id, User user, String title, String content, LocalDate lastEditTime, BookData bookData) {
-        this.id = id;
+    public BookReview(User user, String title, String content, BookData bookData) {
         this.user = user;
         this.title = title;
         this.content = content;
-        this.lastEditTime = lastEditTime;
+//        this.lastEditTime = lastEditTime;
         this.bookData = bookData;
     }
 }
