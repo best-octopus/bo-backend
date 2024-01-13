@@ -1,5 +1,6 @@
 package com.bestoctopus.dearme.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,14 +18,16 @@ public class BookData {
 
     @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long isbn;
+    private long isbn;
 
-    @OneToMany(mappedBy = "bookData")
+    @OneToMany(mappedBy = "bookData", fetch = FetchType.LAZY)
+//    @JsonIgnore
     private final Set<BookReview> bookReviews = new HashSet<>();
 
     @Column(length=30, nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private String imgUrl;
 
     @Column(length=30)
@@ -33,6 +36,7 @@ public class BookData {
     @Column(length=30)
     private String publisher;
 
+    @Column(nullable = false)
     private String description;
 
     @Builder

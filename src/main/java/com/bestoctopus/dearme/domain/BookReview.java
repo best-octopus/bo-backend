@@ -31,10 +31,10 @@ public class BookReview extends BaseTimeEntity{
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDate lastEditTime;
+//    @Column(nullable = false)
+//    private LocalDate lastEditTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "book_data_id", nullable = false)
     private BookData bookData;
 

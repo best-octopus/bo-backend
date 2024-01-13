@@ -19,7 +19,10 @@ import java.util.Set;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
+    @Column(nullable = false)
+    private String name;
 
     //태그 주제 넣기
 
@@ -31,4 +34,9 @@ public class Tag {
 
     @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
     private final Set<BookReviewTagRelation> bookReviewTags = new HashSet<>();
+
+    @Builder
+    public Tag(String name){
+        this.name = name;
+    }
 }

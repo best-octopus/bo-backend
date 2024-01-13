@@ -18,13 +18,19 @@ public class BookReviewTagRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "book_review_id", nullable = false)
     private BookReview bookReview;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;
+
+    @Builder
+    public BookReviewTagRelation(BookReview bookReview, Tag tag){
+        this.bookReview = bookReview;
+        this.tag = tag;
+    }
 }
