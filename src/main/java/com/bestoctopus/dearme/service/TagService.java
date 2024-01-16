@@ -25,7 +25,7 @@ public class TagService {
         return tagRepository.save(tag);
     }
     public void updateTag(BookReview bookReview, Set<Long> tagIds) {
-        Optional<Set<BookReviewTagRelation>> rels = bookReviewTagRelationRepository.findByBookReview(bookReview);
+        Optional<Set<BookReviewTagRelation>> rels = bookReviewTagRelationRepository.findAllByBookReview(bookReview);
         rels.ifPresent(bookReviewTagRelationRepository::deleteAll);
 
         Set<Tag> tags = tagIds.stream().map(id -> tagRepository.findById(id).orElseThrow())

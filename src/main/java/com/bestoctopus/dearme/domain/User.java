@@ -49,6 +49,9 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private final Set<LikeRelation> likes = new HashSet<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private final Set<BookComment> comments = new HashSet<>();
+
     @Builder
     public User(String id, String password, String nickname, String name) {
         this.id = id;

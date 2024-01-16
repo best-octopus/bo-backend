@@ -10,5 +10,5 @@ import java.util.Set;
 
 @Repository
 public interface BookReviewTagRelationRepository extends JpaRepository<BookReviewTagRelation, Long> {
-    Optional<Set<BookReviewTagRelation>> findByBookReview(BookReview bookReview);
+    Optional<Set<BookReviewTagRelation>> findAllByBookReview(BookReview bookReview);
 }

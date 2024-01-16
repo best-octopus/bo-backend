@@ -5,6 +5,7 @@ import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
 import com.bestoctopus.dearme.domain.Tag;
 import com.bestoctopus.dearme.domain.relation.BookReviewTagRelation;
+import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.dto.BookReviewResponseDto;
 import com.bestoctopus.dearme.service.BookReviewService;
@@ -28,7 +29,7 @@ public class BookReviewController {
     private final TagService tagService;
 
     @PostMapping
-    public ResponseEntity<?> saveBookReview(@RequestBody BookReviewRequestDto bookReviewDto){
+    public ResponseEntity<?> saveBookReview(@RequestBody BookReviewRequestDto bookReviewDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = (String) authentication.getPrincipal();
 
@@ -42,11 +43,16 @@ public class BookReviewController {
         return ResponseEntity.ok().body("리뷰가 저장되었습니다.");
     }
 
-    @GetMapping
-    public ResponseEntity<BookReviewResponseDto> getBookReview(@RequestParam("id") Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<BookReviewResponseDto> getBookReview(@PathVariable("id") Long id) {
         BookReview bookReview = bookReviewService.getBookReview(id);
         BookReviewResponseDto response = BookReviewResponseDto.fromEntity(bookReview);
         return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<BookReviewListDto>> getBookReviewList(@RequestParam("minId") Long minId) {
+
     }
 
 //    @GetMapping

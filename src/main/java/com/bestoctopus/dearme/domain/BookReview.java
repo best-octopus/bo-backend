@@ -38,11 +38,14 @@ public class BookReview extends BaseTimeEntity{
     @JoinColumn(name = "book_data_id", nullable = false)
     private BookData bookData;
 
-    @OneToMany(mappedBy = "bookReview")
+    @OneToMany(mappedBy = "bookReview", fetch = FetchType.LAZY)
     private final Set<BookReviewTagRelation> tags = new HashSet<>();
 
-    @OneToMany(mappedBy = "bookReview")
+    @OneToMany(mappedBy = "bookReview", fetch = FetchType.LAZY)
     private final Set<LikeRelation> likes = new HashSet<>();
+
+    @OneToMany(mappedBy="bookReview", fetch = FetchType.LAZY)
+    private final Set<BookComment> comments = new HashSet<>();
 
     @Builder
     public BookReview(User user, String title, String content, BookData bookData) {
