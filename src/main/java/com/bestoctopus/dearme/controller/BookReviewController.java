@@ -51,6 +51,8 @@ public class BookReviewController {
         return ResponseEntity.ok().body(response);
     }
 
+//    @GetMapping()
+
 //    @GetMapping
 //    public List<BookReviewDto> getBookReviewList() {
 //        return bookReviewListService.getAllBookReviewList().stream()

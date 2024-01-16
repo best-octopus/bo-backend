@@ -9,7 +9,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -50,7 +52,7 @@ public class User {
     private final Set<LikeRelation> likes = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private final Set<BookComment> comments = new HashSet<>();
+    private final List<BookComment> comments = new ArrayList<>();
 
     @Builder
     public User(String id, String password, String nickname, String name) {

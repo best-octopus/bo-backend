@@ -18,4 +18,12 @@ public abstract class BaseTimeEntity {
 
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
+    public LocalDateTime getDate(){
+        LocalDateTime time = this.createdDate;
+        if(modifiedDate!=null){
+            time = this.modifiedDate;
+        }
+        return time;
+    }
 }

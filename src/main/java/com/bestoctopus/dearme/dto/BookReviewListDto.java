@@ -34,17 +34,12 @@ public class BookReviewListDto {
     private int commentNum;
 
     public static BookReviewListDto fromEntity(BookReview bookReview){
-        LocalDateTime time = bookReview.getCreatedDate();
-        if(bookReview.getModifiedDate()!=null){
-            time = bookReview.getModifiedDate();
-        }
-
         return BookReviewListDto.builder()
                 .id(bookReview.getId())
                 .writer(bookReview.getUser().getNickname())
                 .title(bookReview.getTitle())
                 .content(bookReview.getContent())
-                .lastEditTime(time)
+                .lastEditTime(bookReview.getDate())
                 .bookImgUrl(bookReview.getBookData().getImgUrl())
                 .tags(bookReview.getTagNameSet())
                 .likeNum(bookReview.getLikes().size())

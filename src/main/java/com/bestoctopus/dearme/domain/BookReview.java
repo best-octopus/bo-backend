@@ -9,7 +9,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -32,9 +34,6 @@ public class BookReview extends BaseTimeEntity{
     @Column(nullable = false)
     private String content;
 
-//    @Column(nullable = false)
-//    private LocalDate lastEditTime;
-
     @ManyToOne
     @JoinColumn(name = "book_data_id", nullable = false)
     private BookData bookData;
@@ -46,7 +45,7 @@ public class BookReview extends BaseTimeEntity{
     private final Set<LikeRelation> likes = new HashSet<>();
 
     @OneToMany(mappedBy="bookReview", fetch = FetchType.LAZY)
-    private final Set<BookComment> comments = new HashSet<>();
+    private final List<BookComment> comments = new ArrayList<>();
 
     @Builder
     public BookReview(User user, String title, String content, BookData bookData) {

@@ -47,7 +47,7 @@ public class BookReviewService {
     }
 
     public Slice<BookReviewListDto> getBookReviewList(int page){
-        Slice<BookReview> bookReviews = bookReviewRepository.findAll(PageRequest.of(page,PAGE_SIZE, Sort.by(Sort.Direction.DESC,"id")));
+        Slice<BookReview> bookReviews = bookReviewRepository.findSliceBy( PageRequest.of(page,PAGE_SIZE, Sort.by(Sort.Direction.DESC,"id")));
         return bookReviews.map(BookReviewListDto::fromEntity);
     }
 }
