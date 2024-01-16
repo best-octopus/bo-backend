@@ -3,11 +3,15 @@ package com.bestoctopus.dearme.service;
 import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
 import com.bestoctopus.dearme.domain.User;
+import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,6 +24,8 @@ public class BookReviewService {
     private final UserRepository userRepository;
     private final BookDataRepository bookDataRepository;
     private final BookReviewRepository bookReviewRepository;
+
+    private final int PAGE_SIZE = 5;
 
     public BookData saveBookData(BookData request_bookData) {
         long isbn = request_bookData.getIsbn();
@@ -38,6 +44,11 @@ public class BookReviewService {
 
     public BookReview getBookReview(long id){
         return bookReviewRepository.findById(id).orElseThrow();
+    }
+
+    public Slice<BookReviewListDto> getBookReviewList(int page){
+        Slice<BookReview> bookReviews = bookReviewRepository.findAll(PageRequest.of(page,PAGE_SIZE, Sort.by(Sort.Direction.DESC,"id")));
+        return bookReviews.map(BookReviewListDto::fromEntity);
     }
 }
 

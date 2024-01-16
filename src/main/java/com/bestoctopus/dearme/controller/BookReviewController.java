@@ -3,22 +3,17 @@ package com.bestoctopus.dearme.controller;
 
 import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
-import com.bestoctopus.dearme.domain.Tag;
-import com.bestoctopus.dearme.domain.relation.BookReviewTagRelation;
 import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.dto.BookReviewResponseDto;
 import com.bestoctopus.dearme.service.BookReviewService;
 import com.bestoctopus.dearme.service.TagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/book")
@@ -51,8 +46,9 @@ public class BookReviewController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BookReviewListDto>> getBookReviewList(@RequestParam("minId") Long minId) {
-
+    public ResponseEntity<Slice<BookReviewListDto>> getBookReviewList(@RequestParam("page") int page) {
+        Slice<BookReviewListDto> response = bookReviewService.getBookReviewList(page);
+        return ResponseEntity.ok().body(response);
     }
 
 //    @GetMapping

@@ -18,7 +18,7 @@ public class BookReviewResponseDto {
 
     private Long id;
 
-    private String author;
+    private String writer;
 
     private String title;
 
@@ -39,7 +39,7 @@ public class BookReviewResponseDto {
         }
         return BookReviewResponseDto.builder()
                 .id(bookReview.getId())
-                .author(bookReview.getUser().getNickname())
+                .writer(bookReview.getUser().getNickname())
                 .title(bookReview.getTitle())
                 .content(bookReview.getContent())
                 .lastEditTime(time)

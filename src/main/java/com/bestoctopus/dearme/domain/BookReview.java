@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "book_review")
@@ -54,5 +55,9 @@ public class BookReview extends BaseTimeEntity{
         this.content = content;
 //        this.lastEditTime = lastEditTime;
         this.bookData = bookData;
+    }
+
+    public Set<String> getTagNameSet(){
+        return getTags().stream().map(tagRel->tagRel.getTag().getName()).collect(Collectors.toSet());
     }
 }

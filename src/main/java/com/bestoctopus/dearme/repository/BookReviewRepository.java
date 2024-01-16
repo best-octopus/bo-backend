@@ -11,6 +11,5 @@ import java.util.Optional;
 @Repository
 public interface BookReviewRepository extends JpaRepository<BookReview, Long>{
     Optional<BookReview> findById(long id);
-
-    Slice<BookReview> findSliceAll(Pageable pageable);
+//    Slice<BookReview> findSliceAll(Pageable pageable);
 }
