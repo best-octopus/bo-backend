@@ -58,6 +58,32 @@ public class BookReviewController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/like")
+    public ResponseEntity<Slice<BookReviewListDto>> getBookReviewListForLikes(@RequestParam("page") int page) {
+        Slice<BookReviewListDto> response = bookReviewService.getBookReviewListForLikes(page);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/best")
+    public ResponseEntity<Slice<BookReviewListDto>> getBookReviewListForBest() {
+        Slice<BookReviewListDto> response = bookReviewService.getBookReviewListForLikes(0, 5);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/{bookReviewId}/like")
+    public ResponseEntity<?> like(@PathVariable long bookReviewId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) authentication.getPrincipal();
+        bookReviewService.like(userId, bookReviewId);
+        return ResponseEntity.ok().body("좋아요");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
+        bookReviewService.delete(id);
+        return ResponseEntity.ok().body("삭제 완료");
+    }
+
 //    @GetMapping()
 
 //    @GetMapping

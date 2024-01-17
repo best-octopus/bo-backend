@@ -17,11 +17,9 @@ import java.util.Set;
 public class BookData {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long isbn;
 
     @OneToMany(mappedBy = "bookData", fetch = FetchType.LAZY)
-//    @JsonIgnore
     private final Set<BookReview> bookReviews = new HashSet<>();
 
     @Column(length=30, nullable = false)

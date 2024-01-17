@@ -23,6 +23,12 @@ public class LikeRelation {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="book_review_id",nullable = false)
+    @JoinColumn(name = "book_review_id", nullable = false)
     private BookReview bookReview;
+
+    @Builder
+    public LikeRelation(User user, BookReview bookReview) {
+        this.user = user;
+        this.bookReview = bookReview;
+    }
 }
