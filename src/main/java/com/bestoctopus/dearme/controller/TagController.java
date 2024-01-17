@@ -1,7 +1,7 @@
 package com.bestoctopus.dearme.controller;
 
 import com.bestoctopus.dearme.domain.Tag;
-import com.bestoctopus.dearme.service.TagService;
+import com.bestoctopus.dearme.service.component.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

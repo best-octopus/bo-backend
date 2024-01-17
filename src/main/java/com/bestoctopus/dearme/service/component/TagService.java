@@ -1,4 +1,4 @@
-package com.bestoctopus.dearme.service;
+package com.bestoctopus.dearme.service.component;
 
 import com.bestoctopus.dearme.domain.BookReview;
 import com.bestoctopus.dearme.domain.Tag;
@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class TagService {
     private final TagRepository tagRepository;
@@ -25,7 +24,8 @@ public class TagService {
         return tagRepository.save(tag);
     }
 
-    public void updateTag(BookReview bookReview, Set<Long> tagIds) {
+    @Transactional
+    public void updateTagForBookReview(BookReview bookReview, Set<Long> tagIds) {
         Optional<Set<BookReviewTagRelation>> rels = bookReviewTagRelationRepository.findAllByBookReview(bookReview);
         rels.ifPresent(bookReviewTagRelationRepository::deleteAll);
 

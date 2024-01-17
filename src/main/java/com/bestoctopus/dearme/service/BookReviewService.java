@@ -7,6 +7,7 @@ import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
 import com.bestoctopus.dearme.repository.*;
+import com.bestoctopus.dearme.service.component.TagService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -18,26 +19,22 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class BookReviewService {
     private final LikeRelationRepository likeRelationRepository;
     private final UserRepository userRepository;
-    private final BookDataRepository bookDataRepository;
     private final BookReviewRepository bookReviewRepository;
+
+    private final TagService tagService;
 
     private final int PAGE_SIZE = 5;
 
-    public BookData saveBookData(BookData request_bookData) {
-        long isbn = request_bookData.getIsbn();
-        Optional<BookData> bookData = bookDataRepository.findById(isbn);
-        return bookData.orElseGet(() -> bookDataRepository.save(request_bookData));
-    }
-
-    public BookReview saveBookReview(BookReviewRequestDto bookReviewDto, String userId) {
+    @Transactional
+    public void saveBookReview(BookReviewRequestDto bookReviewDto, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(NotFoundUserException::new);
-        return bookReviewRepository.save(bookReviewDto.toEntity(user));
+        BookReview bookReview = bookReviewRepository.save(bookReviewDto.toEntity(user));
+        tagService.updateTagForBookReview(bookReview, bookReviewDto.getTags());
     }
 
     public BookReview getBookReview(long id) {

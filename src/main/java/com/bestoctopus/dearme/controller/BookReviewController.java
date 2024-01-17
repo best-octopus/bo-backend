@@ -7,8 +7,8 @@ import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.dto.BookReviewResponseDto;
 import com.bestoctopus.dearme.service.BookReviewService;
-import com.bestoctopus.dearme.service.TagService;
-import jakarta.transaction.Transactional;
+import com.bestoctopus.dearme.service.component.BookDataService;
+import com.bestoctopus.dearme.service.component.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @RequestMapping("/book")
@@ -25,7 +24,7 @@ import java.util.List;
 public class BookReviewController {
 
     private final BookReviewService bookReviewService;
-    private final TagService tagService;
+    private final BookDataService bookDataService;
 
     @PostMapping
     public ResponseEntity<?> saveBookReview(@RequestBody BookReviewRequestDto bookReviewDto) {
@@ -33,10 +32,8 @@ public class BookReviewController {
         String userId = (String) authentication.getPrincipal();
 
         BookData bookData = bookReviewDto.getBookData();
-        bookReviewService.saveBookData(bookData);
-
-        BookReview bookReview = bookReviewService.saveBookReview(bookReviewDto, userId);
-        tagService.updateTag(bookReview, bookReviewDto.getTags());
+        bookDataService.saveBookData(bookData);
+        bookReviewService.saveBookReview(bookReviewDto, userId);
 
         return ResponseEntity.ok().body("리뷰가 저장되었습니다.");
     }
