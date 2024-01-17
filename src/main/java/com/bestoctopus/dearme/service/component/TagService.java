@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,7 +30,7 @@ public class TagService {
         Optional<Set<BookReviewTagRelation>> rels = bookReviewTagRelationRepository.findAllByBookReview(bookReview);
         rels.ifPresent(bookReviewTagRelationRepository::deleteAll);
 
-        Set<Tag> tags = tagIds.stream().map(id -> tagRepository.findById(id).orElseThrow())
+        Set<Tag> tags = tagIds.stream().map(id -> tagRepository.findById(id).orElseThrow(()-> new NoSuchElementException("tag가 존재하지 않습니다.")))
                 .collect(Collectors.toSet());
 
         tags.forEach(tag ->
