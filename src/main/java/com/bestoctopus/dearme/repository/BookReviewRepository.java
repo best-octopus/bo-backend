@@ -11,10 +11,18 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BookReviewRepository extends JpaRepository<BookReview, Long>{
-//    @Query("select distinct b from BookReview b left join fetch b.tags left join fetch b.likes where b.id=:id")
-//    Optional<BookReview> findById(@Param("id")long id);
+public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
     Optional<BookReview> findById(long id);
 
     Slice<BookReview> findSliceBy(Pageable pageable);
+
+
+    @Query("select distinct b from BookReview b join fetch b.bookData join fetch b.user " +
+            "join fetch b.tags t " +
+            "join fetch t.tag " +
+            "left join fetch b.likes " +
+//            "left join fetch l.user " +
+            "where t.tag.id in :tags")
+    Slice<BookReview> findSliceByTag(@Param("tags") long[] tags, Pageable pageable);
+//    List<BookReview> findSliceByTag(@Param("tags") int[] tags);
 }

@@ -14,6 +14,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service
@@ -36,18 +37,20 @@ public class BookReviewService {
     public BookReview saveBookReview(BookReviewRequestDto bookReviewDto, String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(NotFoundUserException::new);
-//        Set<User> likeUsers = bookReviewDto.getLikes().stream()
-//                .map(nickname->userRepository.findByNickname(nickname).orElseThrow())
-//                .collect(Collectors.toSet());
         return bookReviewRepository.save(bookReviewDto.toEntity(user));
     }
 
-    public BookReview getBookReview(long id){
+    public BookReview getBookReview(long id) {
         return bookReviewRepository.findById(id).orElseThrow();
     }
 
-    public Slice<BookReviewListDto> getBookReviewList(int page){
-        Slice<BookReview> bookReviews = bookReviewRepository.findSliceBy( PageRequest.of(page,PAGE_SIZE, Sort.by(Sort.Direction.DESC,"id")));
+    public Slice<BookReviewListDto> getBookReviewList(int page) {
+        Slice<BookReview> bookReviews = bookReviewRepository.findSliceBy(PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id")));
+        return bookReviews.map(BookReviewListDto::fromEntity);
+    }
+
+    public Slice<BookReviewListDto> getBookReviewListForTag(long[] tags, int page) {
+        Slice<BookReview> bookReviews = bookReviewRepository.findSliceByTag(tags, PageRequest.of(page, PAGE_SIZE, Sort.by(Sort.Direction.DESC, "id")));
         return bookReviews.map(BookReviewListDto::fromEntity);
     }
 }

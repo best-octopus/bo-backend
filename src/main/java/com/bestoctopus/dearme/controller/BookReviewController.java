@@ -8,12 +8,16 @@ import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.dto.BookReviewResponseDto;
 import com.bestoctopus.dearme.service.BookReviewService;
 import com.bestoctopus.dearme.service.TagService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("/book")
@@ -33,7 +37,6 @@ public class BookReviewController {
 
         BookReview bookReview = bookReviewService.saveBookReview(bookReviewDto, userId);
         tagService.updateTag(bookReview, bookReviewDto.getTags());
-//        BookReviewResponseDto response = BookReviewResponseDto.fromEntity(bookReview);
 
         return ResponseEntity.ok().body("리뷰가 저장되었습니다.");
     }
@@ -48,6 +51,13 @@ public class BookReviewController {
     @GetMapping
     public ResponseEntity<Slice<BookReviewListDto>> getBookReviewList(@RequestParam("page") int page) {
         Slice<BookReviewListDto> response = bookReviewService.getBookReviewList(page);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/tag")
+    public ResponseEntity<Slice<BookReviewListDto>> getBookReviewListForTag(@RequestParam("tags") String tags, @RequestParam("page") int page) {
+        long[] tagArr = Arrays.stream(tags.split(",")).mapToLong(Long::parseLong).toArray();
+        Slice<BookReviewListDto> response = bookReviewService.getBookReviewListForTag(tagArr, page);
         return ResponseEntity.ok().body(response);
     }
 
