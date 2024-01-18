@@ -8,6 +8,8 @@ import com.bestoctopus.dearme.repository.MemoRepository;
 import com.bestoctopus.dearme.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,8 +24,8 @@ public class MemoService {
 
     private final UserRepository userRepository;
 
-    public List<Memo> getAllMemoList(LocalDate startDate, LocalDate endDate) {
-        return memoRepository.findBydateBetween(startDate, endDate);
+    public Slice<Memo> getAllMemoList(LocalDate startDate, LocalDate endDate, Pageable pageable) {
+        return memoRepository.findBydateBetween(startDate, endDate, pageable);
     }
 
     public Memo postMemo(MemoDto memoDto, String user_id) {

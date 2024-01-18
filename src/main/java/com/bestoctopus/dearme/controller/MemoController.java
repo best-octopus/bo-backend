@@ -8,6 +8,9 @@ import com.bestoctopus.dearme.dto.PutMemoDto;
 import com.bestoctopus.dearme.service.MemoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,22 +31,28 @@ public class MemoController {
 
     @GetMapping("")
     public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                         @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                         @RequestParam(required = false, defaultValue = "0", value = "page") int page) {
 
-        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, pageable);
 
         List<GetMemoDto> getMemoDto = memoList.stream()
                 .map(m-> new GetMemoDto(m.getStatus(), m.getDate()))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(getMemoDto);
+        return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
     }
 
     @GetMapping("/{memo_id}")
     public ResponseEntity<?> getMemo(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                         @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+                                     @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                     @RequestParam(required = false, defaultValue = "0", value = "page") int page) {
 
-        List<Memo> memoList = memoService.getAllMemoList(startDate, endDate);
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, pageable);
 
         List<MemoDto> memoDto = memoList.stream()
                 .map(m-> new MemoDto(m.getStatus(), m.getDate(), m.getContent()))
@@ -94,4 +103,6 @@ public class MemoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // 좋아요 개발
 }

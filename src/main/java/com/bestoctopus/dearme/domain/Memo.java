@@ -32,6 +32,8 @@ public class Memo {
 
     //질문 넣기
 
+    //좋아요
+
     @Column(nullable = false)
     private LocalDate date;
 
