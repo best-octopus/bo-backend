@@ -9,9 +9,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,16 +27,11 @@ public class EmotionController {
     private final DailyEmoService dailyEmoService;
 
     @GetMapping("")
-    public ResponseEntity<?> getEmotionList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public ResponseEntity<?> getEmotionList(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        List<DailyEmo> dailyEmoList = dailyEmoService.getAllEmotionList(startDate, endDate);
+//        DailyEmoDto dailyEmoDto = dailyEmoService.getEmotion(date);
 
-        List<DailyEmoDto> dailyEmoDto = dailyEmoList.stream()
-                .map(m-> new DailyEmoDto(m.getEmotion(), m.getDate()))
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(dailyEmoDto);
+        return ResponseEntity.ok(dailyEmoService.getEmotion(date));
     }
 
     @GetMapping("/count")
@@ -50,10 +48,17 @@ public class EmotionController {
     public ResponseEntity<?> postEmotion( // @RequestHeader("Authorization") String String,
                                              @RequestBody @Valid DailyEmoDto dailyEmoDto) {
 
-        String user_id = "1";
-        dailyEmoService.postDailyEmo(dailyEmoDto, user_id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        String userId = (String)authentication.getPrincipal();
+
+        boolean posted = dailyEmoService.postDailyEmo(dailyEmoDto, userId);
+
+        if (posted) {
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     /*
