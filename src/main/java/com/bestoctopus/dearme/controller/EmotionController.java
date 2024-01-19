@@ -29,8 +29,6 @@ public class EmotionController {
     @GetMapping("")
     public ResponseEntity<?> getEmotionList(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-//        DailyEmoDto dailyEmoDto = dailyEmoService.getEmotion(date);
-
         return ResponseEntity.ok(dailyEmoService.getEmotion(date));
     }
 
@@ -45,8 +43,7 @@ public class EmotionController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> postEmotion( // @RequestHeader("Authorization") String String,
-                                             @RequestBody @Valid DailyEmoDto dailyEmoDto) {
+    public ResponseEntity<?> postEmotion(@RequestBody @Valid DailyEmoDto dailyEmoDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
