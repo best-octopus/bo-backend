@@ -1,27 +1,20 @@
 package com.bestoctopus.dearme.controller;
 
 import com.bestoctopus.dearme.domain.BucketList;
-import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.dto.BucketListDto;
-import com.bestoctopus.dearme.dto.PutBucketListDto;
-import com.bestoctopus.dearme.dto.ResultDto;
 import com.bestoctopus.dearme.repository.UserRepository;
 import com.bestoctopus.dearme.service.BucketListService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.ModelMap;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.transform.Result;
-import java.time.LocalDate;
-import java.util.ArrayList;
+import java.time.YearMonth;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -34,10 +27,9 @@ public class BucketListController {
     private final UserRepository userRepository;
 
     @GetMapping("")
-    public ResponseEntity<?> getBucketList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                             @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+    public ResponseEntity<?> getBucketList(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) YearMonth date) {
 
-        List<BucketList> bucketLists = bucketListService.getAllBucketList(startDate, endDate);
+        List<BucketList> bucketLists = bucketListService.getAllBucketList(date);
 
         List<BucketListDto> collect = bucketLists.stream()
                 .map(m-> new BucketListDto(m.getStatus(), m.getGoal(), m.getDate()))
@@ -48,24 +40,26 @@ public class BucketListController {
 
 
     @PostMapping("")
-    public ResponseEntity<?> PostBucketList( // @RequestHeader("Authorization") String accessToken,
-                                             @RequestBody @Valid BucketListDto bucketListDto) {
+    public ResponseEntity<?> PostBucketList(@RequestBody @Valid BucketListDto bucketListDto) {
 
-        String user_id = "1";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        bucketListService.postBucketList(bucketListDto, user_id);
+        String userId = (String)authentication.getPrincipal();
+
+        bucketListService.postBucketList(bucketListDto, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @PutMapping("/{bucket_id}")
-    public ResponseEntity<?> putBucketList(//@RequestHeader("Authorization") String accessToken,
-                                          @PathVariable("bucket_id") Long bucketId) {
+    public ResponseEntity<?> putBucketList(@PathVariable("bucket_id") Long bucketId) {
 
-        String user_id = "1";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        boolean updated = bucketListService.putBucketList(bucketId, user_id);
+        String userId = (String)authentication.getPrincipal();
+
+        boolean updated = bucketListService.putBucketList(bucketId, userId);
 
         if (updated) {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -77,12 +71,13 @@ public class BucketListController {
 
 
     @DeleteMapping("/{bucket_id}")
-    public ResponseEntity<?> deleteBucketList(//@RequestHeader("Authorization") String accessToken,
-                                      @PathVariable("bucket_id") Long bucketId) {
+    public ResponseEntity<?> deleteBucketList(@PathVariable("bucket_id") Long bucketId) {
 
-        String user_id = "1";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        boolean deleted = bucketListService.deleteBucketList(bucketId, user_id);
+        String userId = (String)authentication.getPrincipal();
+
+        boolean deleted = bucketListService.deleteBucketList(bucketId, userId);
 
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.OK);

@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.YearMonth;
 
 @Entity
 @Table(name = "bucket_list")
@@ -31,11 +31,11 @@ public class BucketList {
     private String goal;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private YearMonth date;
 
 
     @Builder
-    public BucketList(boolean status, String goal, LocalDate date, User user_id) {
+    public BucketList(boolean status, String goal, YearMonth date, User user_id) {
         this.status = status;
         this.goal = goal;
         this.date = date;
