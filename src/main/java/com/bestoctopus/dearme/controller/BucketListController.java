@@ -34,7 +34,7 @@ public class BucketListController {
                 .map(m-> new BucketListDto(m.getStatus(), m.getGoal(), m.getDate()))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(collect);
+        return new ResponseEntity<>(collect, HttpStatus.OK);
     }
 
 

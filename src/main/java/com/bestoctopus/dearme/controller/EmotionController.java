@@ -29,7 +29,7 @@ public class EmotionController {
     @GetMapping("")
     public ResponseEntity<?> getEmotionList(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        return ResponseEntity.ok(dailyEmoService.getEmotion(date));
+        return new ResponseEntity<>(dailyEmoService.getEmotion(date), HttpStatus.OK);
     }
 
     @GetMapping("/count")
@@ -38,7 +38,7 @@ public class EmotionController {
 
         List<DailyEmo> dailyEmo = dailyEmoService.getAllEmotionList(startDate, endDate);
 
-        return ResponseEntity.ok(dailyEmoService.getEmotionCount(dailyEmo));
+        return new ResponseEntity<>(dailyEmoService.getEmotionCount(dailyEmo), HttpStatus.OK);
     }
 
 
