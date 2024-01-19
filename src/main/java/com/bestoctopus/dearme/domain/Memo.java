@@ -1,5 +1,6 @@
 package com.bestoctopus.dearme.domain;
 
+import com.bestoctopus.dearme.domain.relation.MemoLikeRelation;
 import com.bestoctopus.dearme.domain.relation.MemoTagRelation;
 import com.bestoctopus.dearme.dto.PutMemoDto;
 import jakarta.persistence.*;
@@ -25,14 +26,20 @@ public class Memo {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    //종류 넣기
+    @Column(nullable = false)
+    private MemoType type;
 
     @Column(nullable = false)
     private String content;
 
-    //질문 넣기
+    @ElementCollection
+    @CollectionTable(name = "questions", joinColumns = @JoinColumn(name = "memo_id"))
+    @Column(nullable = false)
+    private List<String> questions;
 
     //좋아요
+    @OneToMany(mappedBy = "memo")
+    private Set<MemoLikeRelation> likes;
 
     @Column(nullable = false)
     private LocalDate date;
