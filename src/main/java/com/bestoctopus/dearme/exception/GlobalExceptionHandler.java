@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -31,6 +32,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handlerJwtInvalidException(JwtInvalidException ex){
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("errorCode", "INVALID_JWT");
+        errorResponse.put("errorMessage", ex.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Object> handlerNoSuchElementException(NoSuchElementException ex){
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("errorCode", "INVALID_ELEMENT");
         errorResponse.put("errorMessage", ex.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

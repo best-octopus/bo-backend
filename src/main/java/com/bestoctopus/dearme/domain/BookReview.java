@@ -8,21 +8,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.awt.print.Book;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "book_review")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookReview {
+public class BookReview extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -32,23 +34,29 @@ public class BookReview {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDate lastEditTime;
+    @ManyToOne
+    @JoinColumn(name = "book_data_id", nullable = false)
+    private BookData bookData;
 
-    @OneToOne(mappedBy = "bookReview")
-    private BookInform bookInform;
+    @OneToMany(mappedBy = "bookReview", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private final Set<BookReviewTagRelation> tags = new HashSet<>();
 
-    @OneToMany(mappedBy = "bookReview")
-    private Set<BookReviewTagRelation> tags;
+    @OneToMany(mappedBy = "bookReview", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private final Set<LikeRelation> likes = new HashSet<>();
 
-    @OneToMany(mappedBy = "bookReview")
-    private Set<LikeRelation> likes;
+    @OneToMany(mappedBy="bookReview", fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private final List<BookComment> comments = new ArrayList<>();
 
     @Builder
-    public BookReview (Long id, String title, String content, LocalDate lastEditTime) {
-        this.id = id;
+    public BookReview(User user, String title, String content, BookData bookData) {
+        this.user = user;
         this.title = title;
         this.content = content;
-        this.lastEditTime = lastEditTime;
+//        this.lastEditTime = lastEditTime;
+        this.bookData = bookData;
+    }
+
+    public Set<String> getTagNameSet(){
+        return getTags().stream().map(tagRel->tagRel.getTag().getName()).collect(Collectors.toSet());
     }
 }

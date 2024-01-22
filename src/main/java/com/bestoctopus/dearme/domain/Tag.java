@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -18,16 +19,24 @@ import java.util.Set;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
+
+    @Column(nullable = false)
+    private String name;
 
     //태그 주제 넣기
 
-    @OneToMany(mappedBy = "tag")
-    private Set<UserTagRelation> userTags;
+    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
+    private final Set<UserTagRelation> userTags = new HashSet<>();
 
-    @OneToMany(mappedBy = "tag")
-    private Set<MemoTagRelation> memoTags;
+    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
+    private final Set<MemoTagRelation> memoTags = new HashSet<>();
 
-    @OneToMany(mappedBy = "tag")
-    private Set<BookReviewTagRelation> bookReviewTags;
+    @OneToMany(mappedBy = "tag", fetch = FetchType.LAZY)
+    private final Set<BookReviewTagRelation> bookReviewTags = new HashSet<>();
+
+    @Builder
+    public Tag(String name){
+        this.name = name;
+    }
 }

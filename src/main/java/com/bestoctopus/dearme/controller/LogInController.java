@@ -33,7 +33,7 @@ public class LogInController {
         return ResponseEntity.ok().body("사용가능한 id입니다.");
     }
 
-    @GetMapping("/nickname/exits")
+    @GetMapping("/nickname/exists")
     public ResponseEntity<?> validateNickname(@RequestParam @Valid String nickname) {
         logInService.isNicknameDuplicate(nickname);
         return ResponseEntity.ok().body("사용가능한 닉네임 입니다.");

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,9 +18,9 @@ import java.util.List;
 public class Memo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -36,6 +37,6 @@ public class Memo {
     @Column(nullable = false)
     private Status status;
 
-    @OneToMany(mappedBy = "memo")
-    private List<MemoTagRelation> tags;
+    @OneToMany(mappedBy = "memo",fetch = FetchType.LAZY)
+    private final List<MemoTagRelation> tags = new ArrayList<>();
 }

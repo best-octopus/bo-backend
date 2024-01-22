@@ -1,33 +1,49 @@
 package com.bestoctopus.dearme.dto;
 
 import com.bestoctopus.dearme.domain.BookReview;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
 public class BookReviewListDto {
+    private Long id;
 
-    private final Long id;
+    private String writer;
 
-    private final String title;
+    private String title;
 
-    private final String content;
+    private String content;
 
-    private final String nickname;
+    private LocalDateTime lastEditTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private final LocalDate lastEditTime;
+    private String bookImgUrl;
 
+    private Set<String> tags;
 
-    public BookReviewListDto(BookReview bookreview) {
-        this.id = bookreview.getId();
-        this.title = bookreview.getTitle();
-        this.content = bookreview.getContent();
-        this.lastEditTime = bookreview.getLastEditTime();
+    private int likeNum;
 
-        this.nickname = bookreview.getUser().getNickname();
+    private int commentNum;
+
+    public static BookReviewListDto fromEntity(BookReview bookReview){
+        return BookReviewListDto.builder()
+                .id(bookReview.getId())
+                .writer(bookReview.getUser().getNickname())
+                .title(bookReview.getTitle())
+                .content(bookReview.getContent())
+                .lastEditTime(bookReview.getDate())
+                .bookImgUrl(bookReview.getBookData().getImgUrl())
+                .tags(bookReview.getTagNameSet())
+                .likeNum(bookReview.getLikes().size())
+                .commentNum(bookReview.getComments().size())
+                .build();
     }
 }

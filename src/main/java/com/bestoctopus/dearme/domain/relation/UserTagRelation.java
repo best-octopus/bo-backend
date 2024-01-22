@@ -9,20 +9,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_tag_realtion")
+@Table(name = "user_tag_relation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserTagRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="tag_id",nullable = false)
     private Tag tag;
 }
