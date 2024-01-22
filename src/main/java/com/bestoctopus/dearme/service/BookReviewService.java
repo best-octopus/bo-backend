@@ -1,9 +1,11 @@
 package com.bestoctopus.dearme.service;
 
+import com.bestoctopus.dearme.domain.BookComment;
 import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
 import com.bestoctopus.dearme.domain.User;
 import com.bestoctopus.dearme.domain.relation.LikeRelation;
+import com.bestoctopus.dearme.dto.BookCommentDto;
 import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.exception.NotFoundUserException;
@@ -27,6 +29,7 @@ public class BookReviewService {
     private final LikeRelationRepository likeRelationRepository;
     private final UserRepository userRepository;
     private final BookReviewRepository bookReviewRepository;
+    private final BookCommentRepository bookCommentRepository;
 
     private final TagService tagService;
 
@@ -59,7 +62,7 @@ public class BookReviewService {
         return bookReviews.map(BookReviewListDto::fromEntity);
     }
 
-    public Slice<BookReviewListDto> getBookReviewListForLikes(int page,int page_size) {
+    public Slice<BookReviewListDto> getBookReviewListForLikes(int page, int page_size) {
         Slice<BookReview> bookReviews = bookReviewRepository.findSliceByLikes(PageRequest.of(page, page_size));
         return bookReviews.map(BookReviewListDto::fromEntity);
     }
@@ -67,11 +70,10 @@ public class BookReviewService {
     public void like(String userId, long bookReviewId) {
         BookReview bookReview = bookReviewRepository.findById(bookReviewId).orElseThrow(() -> new NotValidateException("해당하는 BookReview가 없습니다."));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotValidateException("해당하는 user가 없습니다."));
-        Optional<LikeRelation> likeRelation = likeRelationRepository.findByBookReviewAndUser(bookReview,user);
-        if(likeRelation.isPresent()){
+        Optional<LikeRelation> likeRelation = likeRelationRepository.findByBookReviewAndUser(bookReview, user);
+        if (likeRelation.isPresent()) {
             likeRelationRepository.delete(likeRelation.get());
-        }
-        else {
+        } else {
             likeRelationRepository.save(LikeRelation.builder()
                     .user(user)
                     .bookReview(bookReview)
@@ -79,9 +81,17 @@ public class BookReviewService {
         }
     }
 
-    public void delete(long id){
-        BookReview bookReview = bookReviewRepository.findById(id).orElseThrow(()->new NoSuchElementException("해당하는 id의 BookReveiw가 없습니다."));
+    public void delete(long id) {
+        BookReview bookReview = bookReviewRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당하는 id의 BookReveiw가 없습니다."));
         bookReviewRepository.delete(bookReview);
+    }
+
+    public BookCommentDto saveBookComment(String userId, long bookReviewId, BookCommentDto bookCommentDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundUserException("작성자가 user가 아닙니다."));
+        BookReview bookReview = bookReviewRepository.findById(bookReviewId).orElseThrow(() -> new NotValidateException("해당 게시글이 존재하지 않습니다."));
+
+        BookComment bookComment = bookCommentRepository.save(bookCommentDto.toEntity(user,bookReview));
+        return BookCommentDto.fromEntity(bookComment);
     }
 }
 

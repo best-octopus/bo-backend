@@ -1,8 +1,10 @@
 package com.bestoctopus.dearme.controller;
 
 
+import com.bestoctopus.dearme.domain.BookComment;
 import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
+import com.bestoctopus.dearme.dto.BookCommentDto;
 import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
 import com.bestoctopus.dearme.dto.BookReviewResponseDto;
@@ -82,6 +84,14 @@ public class BookReviewController {
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         bookReviewService.delete(id);
         return ResponseEntity.ok().body("삭제 완료");
+    }
+
+    @PostMapping("/{bookReviewId}/comment")
+    public ResponseEntity<BookCommentDto> saveBookComment(@PathVariable("bookReviewId")long bookReviewId, @RequestBody BookCommentDto bookCommentDto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) authentication.getPrincipal();
+        BookCommentDto response = bookReviewService.saveBookComment(userId,bookReviewId,bookCommentDto);
+        return ResponseEntity.ok().body(response);
     }
 
 //    @GetMapping()

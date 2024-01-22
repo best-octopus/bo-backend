@@ -2,6 +2,7 @@ package com.bestoctopus.dearme.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "book_comment")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookComment extends BaseTimeEntity{
+public class BookComment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -24,4 +25,11 @@ public class BookComment extends BaseTimeEntity{
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @Builder
+    public BookComment(String text, BookReview bookReview, User user) {
+        this.text = text;
+        this.bookReview = bookReview;
+        this.user = user;
+    }
 }
