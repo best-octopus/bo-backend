@@ -33,9 +33,9 @@ public class Memo {
     private String content;
 
     @ElementCollection
-    @CollectionTable(name = "questions", joinColumns = @JoinColumn(name = "memo_id"))
+    @CollectionTable(name = "answers", joinColumns = @JoinColumn(name = "memo_id"))
     @Column(nullable = false)
-    private List<String> questions;
+    private List<String> answers;
 
     //좋아요
     @OneToMany(mappedBy = "memo")
@@ -51,10 +51,12 @@ public class Memo {
     private Set<MemoTagRelation> tags;
 
     @Builder
-    public Memo(Status status, LocalDate date, String content, User user) {
+    public Memo(MemoType memoType, Status status, LocalDate date, String content, List<String> answers, User user) {
+        this.type = memoType;
         this.status = status;
         this.date = date;
         this.content = content;
+        this.answers = answers;
         this.user = user;
     }
 

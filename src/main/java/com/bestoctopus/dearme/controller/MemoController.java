@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,14 +33,29 @@ public class MemoController {
     @GetMapping("")
     public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                          @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                         @RequestParam(required = false, defaultValue = "0", value = "page") int page) {
+                                         @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
 
-        Pageable pageable = PageRequest.of(page, 10);
-
-        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, pageable);
+        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, page);
 
         List<GetMemoDto> getMemoDto = memoList.stream()
-                .map(m-> new GetMemoDto(m.getStatus(), m.getDate()))
+                .map(m-> new GetMemoDto(m.getId(), m.getType(), m.getStatus(), m.getDate()))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/tag")
+    public ResponseEntity<?> getMemoTagList(@RequestParam("tags") String tags,
+                                            @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
+
+        List<Integer> tagList = Arrays.stream(tags.split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        Slice<Memo> memoList = memoService.getMemoTagList(tagList, page);
+
+        List<GetMemoDto> getMemoDto = memoList.stream()
+                .map(m-> new GetMemoDto(m.getId(), m.getType(), m.getStatus(), m.getDate()))
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
@@ -48,14 +64,12 @@ public class MemoController {
     @GetMapping("/{memo_id}")
     public ResponseEntity<?> getMemo(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                      @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                     @RequestParam(required = false, defaultValue = "0", value = "page") int page) {
+                                     @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
 
-        Pageable pageable = PageRequest.of(page, 10);
-
-        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, pageable);
+        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, page);
 
         List<MemoDto> memoDto = memoList.stream()
-                .map(m-> new MemoDto(m.getStatus(), m.getDate(), m.getContent()))
+                .map(m-> new MemoDto(m.getType(), m.getStatus(), m.getDate(), m.getContent(), m.getAnswers()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(memoDto);
