@@ -21,6 +21,20 @@ public class DailyEmoService {
 
     private final UserRepository userRepository;
 
+    public DailyEmoDto getEmotion(LocalDate date) {
+        DailyEmoDto dailyEmoDto = new DailyEmoDto();
+
+        DailyEmo dailyEmo = dailyEmoRepository.findByDate(date);
+
+        if (dailyEmo != null) {
+            dailyEmoDto.setEmotion(dailyEmo.getEmotion());
+            dailyEmoDto.setDate(dailyEmo.getDate());
+        }
+
+        return dailyEmoDto;
+    }
+
+
     public List<DailyEmo> getAllEmotionList(LocalDate startDate, LocalDate endDate) {
         return dailyEmoRepository.findBydateBetween(startDate, endDate);
     }
@@ -45,11 +59,19 @@ public class DailyEmoService {
         return new ArrayList<>(emotionCountMap.entrySet());
     }
 
-    public DailyEmo postDailyEmo(DailyEmoDto dailyEmoDto, String user_id) {
+    public boolean postDailyEmo(DailyEmoDto dailyEmoDto, String user_id) {
         User user = userRepository.findById(user_id).orElseThrow();
 
-        DailyEmo dailyEmo = dailyEmoDto.toEntity(user);
-        return dailyEmoRepository.save(dailyEmo);
+        DailyEmo getDailyEmo = dailyEmoRepository.findByDate(dailyEmoDto.getDate());
+
+        if (getDailyEmo == null) {
+            DailyEmo dailyEmo = dailyEmoDto.toEntity(user);
+            dailyEmoRepository.save(dailyEmo);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     /*

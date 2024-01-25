@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +27,8 @@ public class BucketListService {
 
     private final UserRepository userRepository;
 
-    public List<BucketList> getAllBucketList(LocalDate startDate, LocalDate endDate) {
-        return bucketListRepository.findBydateBetween(startDate, endDate);
+    public List<BucketList> getAllBucketList(YearMonth date) {
+        return bucketListRepository.findByDate(date);
     }
 
 

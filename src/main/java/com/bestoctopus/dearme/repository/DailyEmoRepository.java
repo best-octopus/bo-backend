@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface DailyEmoRepository extends JpaRepository<DailyEmo, Long> {
     List<DailyEmo> findBydateBetween(LocalDate startDate, LocalDate endDate);
+    DailyEmo findByDate(LocalDate date);
 }
