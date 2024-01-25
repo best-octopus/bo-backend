@@ -6,6 +6,7 @@ import com.bestoctopus.dearme.domain.MemoType;
 import com.bestoctopus.dearme.domain.Status;
 import com.bestoctopus.dearme.domain.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 public class MemoDto {
 
@@ -37,5 +39,15 @@ public class MemoDto {
                 .user(user)
                 .build();
 
+    }
+
+    public static MemoDto fromEntity(Memo memo){
+        return MemoDto.builder()
+                .memoType(memo.getType())
+                .status(memo.getStatus())
+                .date(memo.getDate())
+                .content(memo.getContent())
+                .answers(memo.getAnswers())
+                .build();
     }
 }

@@ -2,21 +2,20 @@ package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.Memo;
 import com.bestoctopus.dearme.domain.User;
+import com.bestoctopus.dearme.dto.GetMemoDto;
 import com.bestoctopus.dearme.dto.MemoDto;
 import com.bestoctopus.dearme.dto.PutMemoDto;
 import com.bestoctopus.dearme.repository.MemoRepository;
 import com.bestoctopus.dearme.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -26,16 +25,34 @@ public class MemoService {
 
     private final UserRepository userRepository;
 
-    public Slice<Memo> getAllMemoList(LocalDate startDate, LocalDate endDate, Integer page) {
+    public Slice<GetMemoDto> getAllMemoList(int page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("id").descending());
 
-        return memoRepository.findBydateBetween(startDate, endDate, pageable);
+        Slice<Memo> memoList = memoRepository.findAll(pageable);
+
+        return memoList.map(GetMemoDto::fromEntity);
     }
 
-    public Slice<Memo> getMemoTagList(List<Integer>tags, Integer page) {
-        Pageable pageable = PageRequest.of(page, 10);
+    public Optional<Memo> getMemo(Long memo_id) {
 
-        return memoRepository.findMemosIn(tags, pageable);
+        return memoRepository.findById(memo_id);
+    }
+
+//    public Slice<Memo> getMemoTagList(List<Integer>tags, Integer page) {
+//        Pageable pageable = PageRequest.of(page, 10);
+//
+//        return memoRepository.findMemosIn(tags, pageable);
+//    }
+
+    public Stream<GetMemoDto> getBestMemo() {
+
+        Pageable pageable = PageRequest.of(0, 5);
+        Page<Memo> memoLikeCountsPage = memoRepository.findMemosWithLikes(pageable);
+
+        List<Memo> bestMemo = memoLikeCountsPage.getContent();
+        System.out.println(bestMemo);
+
+        return bestMemo.stream().map(GetMemoDto::fromEntity);
     }
 
     public Memo postMemo(MemoDto memoDto, String user_id) {

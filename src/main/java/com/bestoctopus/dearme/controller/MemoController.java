@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/memo")
@@ -30,49 +32,49 @@ public class MemoController {
 
     private final MemoService memoService;
 
+
     @GetMapping("")
-    public ResponseEntity<?> getMemoList(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                         @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                         @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
+    public ResponseEntity<?> getMemoList(@RequestParam(required = false, defaultValue = "0", value = "page") int page) {
 
-        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, page);
+        Slice<GetMemoDto> memoList = memoService.getAllMemoList(page);
 
-        List<GetMemoDto> getMemoDto = memoList.stream()
-                .map(m-> new GetMemoDto(m.getId(), m.getType(), m.getStatus(), m.getDate()))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
+        return new ResponseEntity<>(memoList, HttpStatus.OK);
     }
 
-    @GetMapping("/tag")
-    public ResponseEntity<?> getMemoTagList(@RequestParam("tags") String tags,
-                                            @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
-
-        List<Integer> tagList = Arrays.stream(tags.split(","))
-                .map(Integer::parseInt)
-                .collect(Collectors.toList());
-
-        Slice<Memo> memoList = memoService.getMemoTagList(tagList, page);
-
-        List<GetMemoDto> getMemoDto = memoList.stream()
-                .map(m-> new GetMemoDto(m.getId(), m.getType(), m.getStatus(), m.getDate()))
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
-    }
 
     @GetMapping("/{memo_id}")
-    public ResponseEntity<?> getMemo(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                     @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                     @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
+    public ResponseEntity<?> getMemo(@PathVariable("memo_id") Long memo_id) {
 
-        Slice<Memo> memoList = memoService.getAllMemoList(startDate, endDate, page);
-
-        List<MemoDto> memoDto = memoList.stream()
-                .map(m-> new MemoDto(m.getType(), m.getStatus(), m.getDate(), m.getContent(), m.getAnswers()))
-                .collect(Collectors.toList());
+        Optional<Memo> memo = memoService.getMemo(memo_id);
+        Memo memo2 = memo.orElseThrow();
+        MemoDto memoDto = MemoDto.fromEntity(memo2);
 
         return ResponseEntity.ok(memoDto);
+    }
+
+//    @GetMapping("/tag")
+//    public ResponseEntity<?> getMemoTagList(@RequestParam("tags") String tags,
+//                                            @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
+//
+//        List<Integer> tagList = Arrays.stream(tags.split(","))
+//                .map(Integer::parseInt)
+//                .collect(Collectors.toList());
+//
+//        Slice<Memo> memoList = memoService.getMemoTagList(tagList, page);
+//
+//        List<GetMemoDto> getMemoDto = memoList.stream()
+//                .map(m-> new GetMemoDto(m.getId(), m.getType(), m.getStatus(), m.getDate()))
+//                .collect(Collectors.toList());
+//
+//        return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
+//    }
+
+    @GetMapping("/best")
+    public ResponseEntity<?> getBestMemo() {
+
+        Stream<GetMemoDto> memoList = memoService.getBestMemo();
+
+        return new ResponseEntity<>(memoList, HttpStatus.OK);
     }
 
     @PostMapping("")
