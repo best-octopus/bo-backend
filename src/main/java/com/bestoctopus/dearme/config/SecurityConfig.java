@@ -46,7 +46,8 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").permitAll()
                                 .anyRequest().hasAnyRole(Role.ADMIN.getRole(), Role.NORMAL.getRole())
                 )
-                .cors(Customizer.withDefaults())
+                .cors(configurationSource -> corsConfigurationSource())
+//                .cors(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .apply(new JwtSecurityConfig(authenticationManagerBuilder.getOrBuild()));
