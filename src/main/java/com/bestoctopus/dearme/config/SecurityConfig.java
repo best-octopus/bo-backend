@@ -4,6 +4,7 @@ import com.bestoctopus.dearme.token.JwtAuthenticationProvider;
 import com.bestoctopus.dearme.token.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,6 +41,7 @@ public class SecurityConfig {
                         authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").permitAll()
                                 .anyRequest().hasAnyRole(Role.ADMIN.getRole(), Role.NORMAL.getRole())
                 )
+                .cors(Customizer.withDefaults())
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .apply(new JwtSecurityConfig(authenticationManagerBuilder.getOrBuild()));
