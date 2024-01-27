@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,6 +30,8 @@ public class MemoDto {
 
     private List<String> answers;
 
+    private Set<String> tags;
+
     public Memo toEntity(User user){
         return Memo.builder()
                 .memoType(this.memoType)
@@ -38,7 +41,6 @@ public class MemoDto {
                 .answers(this.answers)
                 .user(user)
                 .build();
-
     }
 
     public static MemoDto fromEntity(Memo memo){

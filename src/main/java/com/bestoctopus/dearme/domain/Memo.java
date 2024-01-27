@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "memo")
@@ -64,5 +65,9 @@ public class Memo {
     public void update(PutMemoDto putMemoDto) {
         this.content = putMemoDto.getContent();
         this.status = putMemoDto.getStatus();
+    }
+
+    public Set<String> getTagNameSet(){
+        return getTags().stream().map(tagRel->tagRel.getTag().getName()).collect(Collectors.toSet());
     }
 }

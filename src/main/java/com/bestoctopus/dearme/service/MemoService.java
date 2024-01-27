@@ -38,21 +38,31 @@ public class MemoService {
         return memoRepository.findById(memo_id);
     }
 
-//    public Slice<Memo> getMemoTagList(List<Integer>tags, Integer page) {
-//        Pageable pageable = PageRequest.of(page, 10);
-//
-//        return memoRepository.findMemosIn(tags, pageable);
-//    }
+    public Slice<GetMemoDto> getMemoTagList(long[] tags, Integer page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Slice<Memo> memo = memoRepository.findSliceByTag(tags, pageable);
+
+        return memo.map(GetMemoDto::fromEntity);
+    }
 
     public Stream<GetMemoDto> getBestMemo() {
 
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(0, 5, Sort.by("id").descending());
         Page<Memo> memoLikeCountsPage = memoRepository.findMemosWithLikes(pageable);
 
         List<Memo> bestMemo = memoLikeCountsPage.getContent();
-        System.out.println(bestMemo);
 
         return bestMemo.stream().map(GetMemoDto::fromEntity);
+    }
+
+    public Slice<GetMemoDto> getMemoSortedByLikes(int page) {
+
+        Pageable pageable = PageRequest.of(page, 10, Sort.by("id").descending());
+
+        Slice<Memo> memoByLikes = memoRepository.findMemosWithLikes(pageable);
+
+        return memoByLikes.map(GetMemoDto::fromEntity);
     }
 
     public Memo postMemo(MemoDto memoDto, String user_id) {

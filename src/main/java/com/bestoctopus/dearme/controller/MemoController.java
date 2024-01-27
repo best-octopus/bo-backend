@@ -52,27 +52,29 @@ public class MemoController {
         return ResponseEntity.ok(memoDto);
     }
 
-//    @GetMapping("/tag")
-//    public ResponseEntity<?> getMemoTagList(@RequestParam("tags") String tags,
-//                                            @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
-//
-//        List<Integer> tagList = Arrays.stream(tags.split(","))
-//                .map(Integer::parseInt)
-//                .collect(Collectors.toList());
-//
-//        Slice<Memo> memoList = memoService.getMemoTagList(tagList, page);
-//
-//        List<GetMemoDto> getMemoDto = memoList.stream()
-//                .map(m-> new GetMemoDto(m.getId(), m.getType(), m.getStatus(), m.getDate()))
-//                .collect(Collectors.toList());
-//
-//        return new ResponseEntity<>(getMemoDto, HttpStatus.OK);
-//    }
+    @GetMapping("/tag")
+    public ResponseEntity<?> getMemoTagList(@RequestParam("tags") String tags,
+                                            @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
+
+        long[] tagList = Arrays.stream(tags.split(",")).mapToLong(Long::parseLong).toArray();
+
+        Slice<GetMemoDto> memoList = memoService.getMemoTagList(tagList, page);
+
+        return new ResponseEntity<>(memoList, HttpStatus.OK);
+    }
 
     @GetMapping("/best")
     public ResponseEntity<?> getBestMemo() {
 
         Stream<GetMemoDto> memoList = memoService.getBestMemo();
+
+        return new ResponseEntity<>(memoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/like")
+    public ResponseEntity<?> getLikesMemo(int page) {
+
+        Slice<GetMemoDto> memoList = memoService.getMemoSortedByLikes(page);
 
         return new ResponseEntity<>(memoList, HttpStatus.OK);
     }
