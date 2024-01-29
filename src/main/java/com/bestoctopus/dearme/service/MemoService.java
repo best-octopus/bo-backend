@@ -38,7 +38,7 @@ public class MemoService {
         return memoRepository.findById(memo_id);
     }
 
-    public Slice<GetMemoDto> getMemoTagList(long[] tags, Integer page) {
+    public Slice<GetMemoDto> getMemoTagList(int[] tags, Integer page) {
         Pageable pageable = PageRequest.of(page, 10);
 
         Slice<Memo> memo = memoRepository.findSliceByTag(tags, pageable);

@@ -56,7 +56,7 @@ public class MemoController {
     public ResponseEntity<?> getMemoTagList(@RequestParam("tags") String tags,
                                             @RequestParam(required = false, defaultValue = "0", value = "page") Integer page) {
 
-        long[] tagList = Arrays.stream(tags.split(",")).mapToLong(Long::parseLong).toArray();
+        int[] tagList = Arrays.stream(tags.split(",")).mapToInt(Integer::parseInt).toArray();
 
         Slice<GetMemoDto> memoList = memoService.getMemoTagList(tagList, page);
 

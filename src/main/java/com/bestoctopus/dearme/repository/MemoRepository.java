@@ -22,5 +22,5 @@ public interface MemoRepository extends JpaRepository<Memo, Long> {
             "left join fetch m.tags r " +
             "join m.tags t " +
             "where t.id in :tags")
-    Slice<Memo> findSliceByTag(@Param("tags") long[] tags, Pageable pageable);
+    Slice<Memo> findSliceByTag(@Param("tags") int[] tags, Pageable pageable);
 }
