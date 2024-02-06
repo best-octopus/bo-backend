@@ -71,6 +71,7 @@ public class BookReviewController {
     public ResponseEntity<Slice<BookReviewListDto>> getBookReviewListForLikes(@RequestParam("page") int page) {
         Slice<BookReviewListDto> response = bookReviewService.getBookReviewListForLikes(page);
         return ResponseEntity.ok().body(response);
+
     }
 
     @GetMapping("/best")
