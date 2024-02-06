@@ -57,6 +57,11 @@ public class BookReviewService {
         return bookReviews.map(BookReviewListDto::fromEntity);
     }
 
+    public Slice<BookReviewListDto> getBookReviewListForTagLike(long[] tags, int page) {
+        Slice<BookReview> bookReviews = bookReviewRepository.findSliceByTagLike(tags, PageRequest.of(page, PAGE_SIZE));
+        return bookReviews.map(BookReviewListDto::fromEntity);
+    }
+
     public Slice<BookReviewListDto> getBookReviewListForLikes(int page) {
         Slice<BookReview> bookReviews = bookReviewRepository.findSliceByLikes(PageRequest.of(page, PAGE_SIZE));
         return bookReviews.map(BookReviewListDto::fromEntity);

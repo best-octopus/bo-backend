@@ -60,6 +60,13 @@ public class BookReviewController {
         return ResponseEntity.ok().body(response);
     }
 
+    @GetMapping("/tag/like")
+    public ResponseEntity<Slice<BookReviewListDto>> getBookReviewListForTagLike(@RequestParam("tags") String tags, @RequestParam("page") int page) {
+        long[] tagArr = Arrays.stream(tags.split(",")).mapToLong(Long::parseLong).toArray();
+        Slice<BookReviewListDto> response = bookReviewService.getBookReviewListForTagLike(tagArr, page);
+        return ResponseEntity.ok().body(response);
+    }
+
     @GetMapping("/like")
     public ResponseEntity<Slice<BookReviewListDto>> getBookReviewListForLikes(@RequestParam("page") int page) {
         Slice<BookReviewListDto> response = bookReviewService.getBookReviewListForLikes(page);

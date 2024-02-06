@@ -33,4 +33,14 @@ public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
             "left join fetch b.comments " +
             "order by size(b.likes) DESC, b.id DESC")
     Slice<BookReview> findSliceByLikes(Pageable pageable);
+
+    @Query("select distinct b from BookReview b join fetch b.bookData join fetch b.user " +
+            "left join fetch b.tags r " +
+            "left join fetch r.tag " +
+            "join b.tags t " +
+            "left join fetch b.likes " +
+            "left join fetch b.comments " +
+            "where t.tag.id in :tags "+
+            "order by size(b.likes) DESC, b.id DESC")
+    Slice<BookReview> findSliceByTagLike(@Param("tags") long[] tags, Pageable pageable);
 }
