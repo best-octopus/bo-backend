@@ -4,6 +4,7 @@ import com.bestoctopus.dearme.token.JwtAuthenticationProvider;
 import com.bestoctopus.dearme.token.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -44,6 +45,8 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                         authorizationManagerRequestMatcherRegistry.requestMatchers("/user/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/book/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/memo/**").permitAll()
                                 .anyRequest().hasAnyRole(Role.ADMIN.getRole(), Role.NORMAL.getRole())
                 )
                 .cors((cors) -> cors
