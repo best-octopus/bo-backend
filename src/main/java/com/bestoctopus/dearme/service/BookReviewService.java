@@ -81,8 +81,11 @@ public class BookReviewService {
         }
     }
 
-    public void delete(long id) {
+    public void delete(String userId,long id) {
         BookReview bookReview = bookReviewRepository.findById(id).orElseThrow(() -> new NoSuchElementException("해당하는 id의 BookReveiw가 없습니다."));
+        if(!bookReview.getUser().getId().equals(userId)){
+            throw new NotValidateException("작성자가 아니어서 삭제할 수 없습니다.");
+        }
         bookReviewRepository.delete(bookReview);
     }
 

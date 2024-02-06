@@ -82,7 +82,9 @@ public class BookReviewController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        bookReviewService.delete(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = (String) authentication.getPrincipal();
+        bookReviewService.delete(userId,id);
         return ResponseEntity.ok().body("삭제 완료");
     }
 
