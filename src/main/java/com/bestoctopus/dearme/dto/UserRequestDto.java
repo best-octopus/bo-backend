@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class UserDto {
+public class UserRequestDto {
     private String id;
     private String password;
     private String nickname;
@@ -27,16 +27,6 @@ public class UserDto {
                 .password(this.password)
                 .nickname(this.nickname)
                 .name(this.name)
-                .build();
-
-    }
-
-    public static UserDto fromEntity(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .password(user.getPassword())
-                .nickname(user.getNickname())
-                .name(user.getName())
                 .build();
 
     }

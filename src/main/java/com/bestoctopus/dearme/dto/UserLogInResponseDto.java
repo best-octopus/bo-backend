@@ -10,10 +10,10 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class UserLogInResponseDto {
-    private UserDto user;
+    private UserResponseDto user;
     private JwtDto jwt;
 
-    public static UserLogInResponseDto fromEntity(UserDto userDto, JwtDto jwtDto) {
+    public static UserLogInResponseDto fromEntity(UserResponseDto userDto, JwtDto jwtDto) {
         return UserLogInResponseDto.builder()
                 .user(userDto)
                 .jwt(jwtDto)
