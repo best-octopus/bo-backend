@@ -1,5 +1,6 @@
 package com.bestoctopus.dearme.dto;
 
+import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,8 @@ public class BookReviewListDto {
 
     private String bookImgUrl;
 
+    private String bookTitle;
+
     private Set<String> tags;
 
     private int likeNum;
@@ -34,13 +37,15 @@ public class BookReviewListDto {
     private int commentNum;
 
     public static BookReviewListDto fromEntity(BookReview bookReview){
+        BookData bookData = bookReview.getBookData();
         return BookReviewListDto.builder()
                 .id(bookReview.getId())
                 .writer(bookReview.getUser().getNickname())
                 .title(bookReview.getTitle())
                 .content(bookReview.getContent())
                 .lastEditTime(bookReview.getDate())
-                .bookImgUrl(bookReview.getBookData().getImgUrl())
+                .bookImgUrl(bookData.getImgUrl())
+                .bookTitle(bookData.getTitle())
                 .tags(bookReview.getTagNameSet())
                 .likeNum(bookReview.getLikes().size())
                 .commentNum(bookReview.getComments().size())
