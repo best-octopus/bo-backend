@@ -1,10 +1,9 @@
 package com.bestoctopus.dearme.service;
 
 import com.bestoctopus.dearme.domain.BookComment;
-import com.bestoctopus.dearme.domain.BookData;
 import com.bestoctopus.dearme.domain.BookReview;
 import com.bestoctopus.dearme.domain.User;
-import com.bestoctopus.dearme.domain.relation.LikeRelation;
+import com.bestoctopus.dearme.domain.relation.BookReviewLikeRelation;
 import com.bestoctopus.dearme.dto.BookCommentDto;
 import com.bestoctopus.dearme.dto.BookReviewListDto;
 import com.bestoctopus.dearme.dto.BookReviewRequestDto;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -75,11 +73,11 @@ public class BookReviewService {
     public void like(String userId, long bookReviewId) {
         BookReview bookReview = bookReviewRepository.findById(bookReviewId).orElseThrow(() -> new NotValidateException("해당하는 BookReview가 없습니다."));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotValidateException("해당하는 user가 없습니다."));
-        Optional<LikeRelation> likeRelation = likeRelationRepository.findByBookReviewAndUser(bookReview, user);
+        Optional<BookReviewLikeRelation> likeRelation = likeRelationRepository.findByBookReviewAndUser(bookReview, user);
         if (likeRelation.isPresent()) {
             likeRelationRepository.delete(likeRelation.get());
         } else {
-            likeRelationRepository.save(LikeRelation.builder()
+            likeRelationRepository.save(BookReviewLikeRelation.builder()
                     .user(user)
                     .bookReview(bookReview)
                     .build());

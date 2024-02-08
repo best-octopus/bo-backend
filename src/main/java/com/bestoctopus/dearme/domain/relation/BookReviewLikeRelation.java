@@ -9,10 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "like_relation")
+@Table(name = "book_review_like_relation")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LikeRelation {
+public class BookReviewLikeRelation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,7 @@ public class LikeRelation {
     private BookReview bookReview;
 
     @Builder
-    public LikeRelation(User user, BookReview bookReview) {
+    public BookReviewLikeRelation(User user, BookReview bookReview) {
         this.user = user;
         this.bookReview = bookReview;
     }

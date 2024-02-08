@@ -38,7 +38,7 @@ INSERT INTO tag(name) VALUES
     ('식욕'),('가족'),('수면욕'),('인간관계'),('연애'),('진로'),('학업'),('취업');
 
 INSERT INTO book_review_tag_relation(book_review_id,tag_id) VALUES
-    (1,1),(1,2),(2,7),(3,4),(3,8),(4,1),(4,4),(4,7),(5,6),(5,7);
+    (1,1),(1,2),(2,7),(3,4),(3,8),(4,1),(4,4),(4,7),(5,6),(5,7),(6,1),(6,3),(6,6),(7,8),(8,5),(8,2);
 
-INSERT INTO like_relation(book_review_id,user_id) VALUES
+INSERT INTO book_review_like_relation(book_review_id,user_id) VALUES
     (1,'chamny'),(2,'ajou'),(2,'moon'),(3,'ajou'),(4,'moon'),(7,'chamny'),(7,'moon');

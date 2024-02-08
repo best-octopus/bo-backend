@@ -1,7 +1,7 @@
 package com.bestoctopus.dearme.domain;
 
 
-import com.bestoctopus.dearme.domain.relation.LikeRelation;
+import com.bestoctopus.dearme.domain.relation.BookReviewLikeRelation;
 import com.bestoctopus.dearme.domain.relation.UserTagRelation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -49,7 +49,7 @@ public class User {
     private final Set<UserTagRelation> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private final Set<LikeRelation> likes = new HashSet<>();
+    private final Set<BookReviewLikeRelation> likes = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private final List<BookComment> comments = new ArrayList<>();

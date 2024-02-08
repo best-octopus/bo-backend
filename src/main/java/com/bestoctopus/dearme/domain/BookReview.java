@@ -1,14 +1,13 @@
 package com.bestoctopus.dearme.domain;
 
 import com.bestoctopus.dearme.domain.relation.BookReviewTagRelation;
-import com.bestoctopus.dearme.domain.relation.LikeRelation;
+import com.bestoctopus.dearme.domain.relation.BookReviewLikeRelation;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -44,7 +43,7 @@ public class BookReview extends BaseTimeEntity {
     private final Set<BookReviewTagRelation> tags = new HashSet<>();
 
     @OneToMany(mappedBy = "bookReview", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private final Set<LikeRelation> likes = new HashSet<>();
+    private final Set<BookReviewLikeRelation> likes = new HashSet<>();
 
     @OneToMany(mappedBy = "bookReview", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private final List<BookComment> comments = new ArrayList<>();
