@@ -26,6 +26,8 @@ public class BookReviewResponseDto {
 
     private String content;
 
+    private int star;
+
     private LocalDateTime lastEditTime;
 
     private BookDataDto bookData;
@@ -42,6 +44,7 @@ public class BookReviewResponseDto {
                 .writer(bookReview.getUser().getNickname())
                 .title(bookReview.getTitle())
                 .content(bookReview.getContent())
+                .star(bookReview.getStar())
                 .lastEditTime(bookReview.getDate())
                 .bookData(BookDataDto.fromEntity(bookReview.getBookData()))
                 .tags(bookReview.getTags().stream()

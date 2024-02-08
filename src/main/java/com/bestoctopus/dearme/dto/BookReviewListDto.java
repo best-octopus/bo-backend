@@ -24,6 +24,8 @@ public class BookReviewListDto {
 
     private String content;
 
+    private int star;
+
     private LocalDateTime lastEditTime;
 
     private String bookImgUrl;
@@ -43,6 +45,7 @@ public class BookReviewListDto {
                 .writer(bookReview.getUser().getNickname())
                 .title(bookReview.getTitle())
                 .content(bookReview.getContent())
+                .star(bookReview.getStar())
                 .lastEditTime(bookReview.getDate())
                 .bookImgUrl(bookData.getImgUrl())
                 .bookTitle(bookData.getTitle())

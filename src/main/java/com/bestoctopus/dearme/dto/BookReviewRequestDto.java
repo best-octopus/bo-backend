@@ -17,6 +17,8 @@ public class BookReviewRequestDto {
 
     private String content;
 
+    private int star;
+
 //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
 //    private final LocalDate lastEditTime;
 
@@ -31,6 +33,7 @@ public class BookReviewRequestDto {
                 .user(user)
                 .title(title)
                 .content(content)
+                .star(star)
                 .bookData(bookData)
                 .build();
     }
